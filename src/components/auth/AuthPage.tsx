@@ -65,24 +65,21 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-[#FFF8F0] flex items-center justify-center px-4 py-12">
+    <div className="min-h-dvh bg-background flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm space-y-8">
         {/* Branding */}
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-black tracking-tight text-[#1A1A2E]">
+          <h1 className="text-4xl font-black tracking-tight text-foreground">
             Frugal
           </h1>
-          <p className="text-[#6B6B80] font-medium">
+          <p className="text-muted-foreground font-medium">
             Weekly budgeting, simplified.
           </p>
         </div>
 
         {/* Card */}
-        <div
-          className="bg-[#FFFEF9] border-2 border-[#1A1A2E] rounded-2xl p-6 space-y-5"
-          style={{ boxShadow: "6px 6px 0px #1A1A2E" }}
-        >
-          <h2 className="text-xl font-bold text-center text-[#1A1A2E]">
+        <div className="retro-card p-6 space-y-5">
+          <h2 className="text-xl font-bold text-center text-foreground">
             {mode === "signin" ? "Welcome Back" : "Create Account"}
           </h2>
 
@@ -91,7 +88,7 @@ export function AuthPage() {
             <button
               type="button"
               onClick={() => signInWithOAuth("google")}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-[#1A1A2E] rounded-xl bg-white font-semibold text-sm text-[#1A1A2E] hover:bg-[#F5EDE4] transition-colors active:translate-y-px"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-border rounded-xl bg-card font-semibold text-sm text-foreground hover:bg-muted transition-colors active:translate-y-px"
             >
               <GoogleIcon />
               Continue with Google
@@ -100,11 +97,11 @@ export function AuthPage() {
 
           {/* Divider */}
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-[#E0D8CE]" />
-            <span className="text-xs font-semibold text-[#6B6B80] uppercase tracking-wider">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               or
             </span>
-            <div className="flex-1 h-px bg-[#E0D8CE]" />
+            <div className="flex-1 h-px bg-border" />
           </div>
 
           {/* Email/password form */}
@@ -112,7 +109,7 @@ export function AuthPage() {
             <div className="space-y-2">
               <label
                 htmlFor="auth-email"
-                className="text-sm font-semibold text-[#1A1A2E]"
+                className="text-sm font-semibold text-foreground"
               >
                 Email
               </label>
@@ -123,14 +120,14 @@ export function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-3 py-2.5 border-2 border-[#1A1A2E] rounded-xl bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2D9E8F] focus:ring-offset-1"
+                className="w-full px-3 py-2.5 border-2 border-border rounded-xl bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="auth-password"
-                className="text-sm font-semibold text-[#1A1A2E]"
+                className="text-sm font-semibold text-foreground"
               >
                 Password
               </label>
@@ -142,18 +139,18 @@ export function AuthPage() {
                 placeholder="••••••••"
                 required
                 minLength={6}
-                className="w-full px-3 py-2.5 border-2 border-[#1A1A2E] rounded-xl bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2D9E8F] focus:ring-offset-1"
+                className="w-full px-3 py-2.5 border-2 border-border rounded-xl bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
               />
             </div>
 
             {error && (
-              <p className="text-sm text-red-600 font-medium text-center">
+              <p className="text-sm text-destructive font-medium text-center">
                 {error}
               </p>
             )}
 
             {success && (
-              <p className="text-sm text-[#2D9E8F] font-medium text-center">
+              <p className="text-sm text-primary font-medium text-center">
                 {success}
               </p>
             )}
@@ -161,8 +158,7 @@ export function AuthPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#2D9E8F] text-white font-semibold py-2.5 rounded-xl border-2 border-[#1A1A2E] hover:brightness-110 transition-all active:translate-y-px disabled:opacity-50"
-              style={{ boxShadow: "3px 3px 0px #1A1A2E" }}
+              className="retro-btn w-full bg-primary text-primary-foreground font-semibold py-2.5 rounded-xl hover:brightness-110 transition-all active:translate-y-px disabled:opacity-50"
             >
               {loading
                 ? "..."
@@ -172,12 +168,12 @@ export function AuthPage() {
             </button>
           </form>
 
-          <p className="text-center text-sm text-[#6B6B80]">
+          <p className="text-center text-sm text-muted-foreground">
             {mode === "signin" ? "No account? " : "Already have an account? "}
             <button
               type="button"
               onClick={switchMode}
-              className="text-[#2D9E8F] font-semibold hover:underline"
+              className="text-primary font-semibold hover:underline"
             >
               {mode === "signin" ? "Sign Up" : "Sign In"}
             </button>

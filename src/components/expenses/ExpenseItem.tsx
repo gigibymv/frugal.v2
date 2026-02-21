@@ -53,13 +53,13 @@ export function ExpenseItem({ expense }: ExpenseItemProps) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[#1A1A2E] truncate">
+          <p className="text-sm font-medium text-foreground truncate">
             {expense.description || cat.label}
           </p>
-          <p className="text-xs text-[#6B6B80]">{formatDateFull(expense.date)}</p>
+          <p className="text-xs text-muted-foreground">{formatDateFull(expense.date)}</p>
         </div>
 
-        <span className="font-mono-nums text-sm font-semibold text-[#1A1A2E] shrink-0">
+        <span className="font-mono-nums text-sm font-semibold text-foreground shrink-0">
           {formatCurrency(expense.amount)}
         </span>
       </button>

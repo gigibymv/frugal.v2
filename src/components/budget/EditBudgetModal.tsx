@@ -15,7 +15,7 @@ const PRESET_AMOUNTS = [200, 300, 500, 750, 1000];
 const PRESET_COLORS = [
   { bg: "bg-[#E0F5F1]", border: "border-[#2D9E8F]", text: "text-[#2D9E8F]" },
   { bg: "bg-[#E0EAFF]", border: "border-[#5B8DEF]", text: "text-[#5B8DEF]" },
-  { bg: "bg-[#FFF8E0]", border: "border-[#F4D35E]", text: "text-[#1A1A2E]" },
+  { bg: "bg-[#FFF8E0]", border: "border-[#F4D35E]", text: "text-foreground" },
   { bg: "bg-[#FFE0F0]", border: "border-[#E91E8C]", text: "text-[#E91E8C]" },
   { bg: "bg-[#FFF0E0]", border: "border-[#FF8C42]", text: "text-[#FF8C42]" },
 ];
@@ -67,8 +67,7 @@ export function EditBudgetModal() {
       onOpenChange={(open) => toggleEditBudgetModal(open)}
     >
       <DialogContent
-        className="retro-card bg-[#FFFEF9] border-2 border-foreground p-0 gap-0 sm:max-w-md"
-        style={{ boxShadow: "6px 6px 0px #1A1A2E" }}
+        className="retro-card bg-card border-2 border-foreground p-0 gap-0 sm:max-w-md"
       >
         <DialogHeader className="px-6 pt-6 pb-2">
           <DialogTitle className="text-xl font-bold text-center">
@@ -104,7 +103,7 @@ export function EditBudgetModal() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSave();
                 }}
-                className="w-full max-w-[280px] text-center text-4xl font-mono-nums font-bold bg-[#FFF8F0] border-2 border-foreground rounded-xl py-3 pl-10 pr-4 outline-none focus:ring-2 focus:ring-[#2D9E8F] focus:ring-offset-1 placeholder:text-muted-foreground/40"
+                className="w-full max-w-[280px] text-center text-4xl font-mono-nums font-bold bg-background border-2 border-foreground rounded-xl py-3 pl-10 pr-4 outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 placeholder:text-muted-foreground/40"
                 placeholder="0"
                 autoFocus
               />
@@ -130,7 +129,7 @@ export function EditBudgetModal() {
                     onClick={() => handlePreset(preset)}
                     className={`retro-btn px-4 py-1.5 text-sm font-mono-nums font-bold transition-colors ${
                       isActive
-                        ? "bg-[#2D9E8F] text-white border-foreground"
+                        ? "bg-primary text-primary-foreground border-foreground"
                         : `${colors.bg} ${colors.text} ${colors.border}`
                     }`}
                   >
@@ -145,7 +144,7 @@ export function EditBudgetModal() {
           <button
             type="button"
             onClick={handleSave}
-            className="retro-btn w-full bg-[#2D9E8F] text-white text-lg font-bold py-3 hover:bg-[#258A7D] transition-colors"
+            className="retro-btn w-full bg-primary text-primary-foreground text-lg font-bold py-3 hover:brightness-110 transition-colors"
           >
             Save Budget
           </button>

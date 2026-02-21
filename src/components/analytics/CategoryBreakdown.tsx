@@ -18,7 +18,7 @@ export function CategoryBreakdown() {
   if (sortedCategories.length === 0) {
     return (
       <div className="retro-card p-5">
-        <h3 className="text-lg font-bold text-[#1A1A2E] mb-4">
+        <h3 className="text-lg font-bold text-foreground mb-4">
           Category Breakdown
         </h3>
         <p className="text-muted-foreground text-sm text-center py-4">
@@ -30,7 +30,7 @@ export function CategoryBreakdown() {
 
   return (
     <div className="retro-card p-5">
-      <h3 className="text-lg font-bold text-[#1A1A2E] mb-4">
+      <h3 className="text-lg font-bold text-foreground mb-4">
         Category Breakdown
       </h3>
       <div className="space-y-3">

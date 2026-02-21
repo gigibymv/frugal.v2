@@ -32,7 +32,7 @@ export function SpendingSummary() {
 
   return (
     <div className="retro-card p-5">
-      <h3 className="text-lg font-bold text-[#1A1A2E] mb-4">
+      <h3 className="text-lg font-bold text-foreground mb-4">
         Spending Summary
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -41,7 +41,7 @@ export function SpendingSummary() {
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
             Avg / Day
           </p>
-          <p className="font-mono-nums text-xl font-bold text-[#1A1A2E]">
+          <p className="font-mono-nums text-xl font-bold text-foreground">
             {formatCurrency(stats.avgDaily)}
           </p>
         </div>
@@ -51,7 +51,7 @@ export function SpendingSummary() {
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
             Top Category
           </p>
-          <p className="font-semibold text-[#1A1A2E] truncate">
+          <p className="font-semibold text-foreground truncate">
             {stats.biggestCategoryLabel}
           </p>
           {stats.biggestAmount > 0 && (
@@ -66,7 +66,7 @@ export function SpendingSummary() {
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
             Transactions
           </p>
-          <p className="font-mono-nums text-xl font-bold text-[#1A1A2E]">
+          <p className="font-mono-nums text-xl font-bold text-foreground">
             {stats.transactionCount}
           </p>
         </div>

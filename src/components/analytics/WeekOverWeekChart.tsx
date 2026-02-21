@@ -24,7 +24,7 @@ function CustomTooltip({
   return (
     <div className="retro-card px-3 py-2 text-sm">
       <p className="font-medium">{label}</p>
-      <p className="font-mono-nums font-semibold text-[#2D9E8F]">
+      <p className="font-mono-nums font-semibold text-primary">
         {formatCurrency(payload[0].value)}
       </p>
     </div>
@@ -44,7 +44,7 @@ export function WeekOverWeekChart() {
 
   return (
     <div className="retro-card p-5">
-      <h3 className="text-lg font-bold text-[#1A1A2E] mb-4">
+      <h3 className="text-lg font-bold text-foreground mb-4">
         Week Over Week
       </h3>
       {!hasData ? (
@@ -60,12 +60,12 @@ export function WeekOverWeekChart() {
             >
               <XAxis
                 dataKey="label"
-                tick={{ fontSize: 12, fill: "#6B6B80" }}
+                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "#6B6B80" }}
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v: number) => `$${v}`}
@@ -76,7 +76,7 @@ export function WeekOverWeekChart() {
               />
               <Bar
                 dataKey="total"
-                fill="#2D9E8F"
+                fill="var(--primary)"
                 radius={[6, 6, 0, 0]}
                 maxBarSize={48}
               />

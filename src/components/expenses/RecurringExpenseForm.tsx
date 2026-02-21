@@ -92,9 +92,9 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
         if (!o) handleClose();
       }}
     >
-      <DialogContent className="retro-card sm:max-w-[420px] p-0 gap-0 border-2 border-[#1A1A2E]">
+      <DialogContent className="retro-card sm:max-w-[420px] p-0 gap-0 border-2 border-border">
         <DialogHeader className="px-6 pt-6 pb-2">
-          <DialogTitle className="text-lg font-bold text-[#1A1A2E]">
+          <DialogTitle className="text-lg font-bold text-foreground">
             {editing ? "Edit Recurring Expense" : "Add Recurring Expense"}
           </DialogTitle>
         </DialogHeader>
@@ -102,11 +102,11 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
         <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-5">
           {/* Amount */}
           <div className="space-y-2">
-            <Label htmlFor="rec-amount" className="text-sm font-semibold text-[#1A1A2E]">
+            <Label htmlFor="rec-amount" className="text-sm font-semibold text-foreground">
               Amount
             </Label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-mono-nums text-[#6B6B80]">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-mono-nums text-muted-foreground">
                 $
               </span>
               <Input
@@ -117,7 +117,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="pl-10 text-3xl font-mono-nums h-16 border-2 border-[#1A1A2E] rounded-xl bg-white focus-visible:ring-[#2D9E8F]"
+                className="pl-10 text-3xl font-mono-nums h-16 border-2 border-border rounded-xl bg-card focus-visible:ring-primary"
                 required
                 autoFocus
               />
@@ -126,13 +126,13 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
 
           {/* Category */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-[#1A1A2E]">Category</Label>
+            <Label className="text-sm font-semibold text-foreground">Category</Label>
             <CategoryPicker selected={category} onSelect={setCategory} />
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="rec-description" className="text-sm font-semibold text-[#1A1A2E]">
+            <Label htmlFor="rec-description" className="text-sm font-semibold text-foreground">
               Description
             </Label>
             <Input
@@ -141,13 +141,13 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
               placeholder="e.g. Netflix subscription"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="border-2 border-[#1A1A2E] rounded-xl bg-white focus-visible:ring-[#2D9E8F]"
+              className="border-2 border-border rounded-xl bg-card focus-visible:ring-primary"
             />
           </div>
 
           {/* Frequency */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-[#1A1A2E]">Frequency</Label>
+            <Label className="text-sm font-semibold text-foreground">Frequency</Label>
             <div className="flex gap-2">
               {FREQUENCIES.map((f) => (
                 <button
@@ -156,8 +156,8 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
                   onClick={() => setFrequency(f.value)}
                   className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all border-2 ${
                     frequency === f.value
-                      ? "border-[#1A1A2E] bg-[#1A1A2E] text-white shadow-[2px_2px_0px_#1A1A2E]"
-                      : "border-[#1A1A2E]/20 text-[#1A1A2E] hover:border-[#1A1A2E]/40"
+                      ? "border-foreground bg-foreground text-background shadow-[2px_2px_0px_var(--foreground)]"
+                      : "border-foreground/20 text-foreground hover:border-foreground/40"
                   }`}
                 >
                   {f.label}
@@ -168,7 +168,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
 
           {/* Start Date */}
           <div className="space-y-2">
-            <Label htmlFor="rec-start-date" className="text-sm font-semibold text-[#1A1A2E]">
+            <Label htmlFor="rec-start-date" className="text-sm font-semibold text-foreground">
               Start Date
             </Label>
             <Input
@@ -176,7 +176,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="border-2 border-[#1A1A2E] rounded-xl bg-white focus-visible:ring-[#2D9E8F]"
+              className="border-2 border-border rounded-xl bg-card focus-visible:ring-primary"
               required
             />
           </div>
@@ -185,8 +185,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
           <button
             type="submit"
             disabled={!amount || !category}
-            className="retro-btn w-full py-3 text-white font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ backgroundColor: "#2D9E8F" }}
+            className="retro-btn w-full py-3 bg-primary text-primary-foreground font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {editing ? "Save Changes" : "Add Recurring Expense"}
           </button>

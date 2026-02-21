@@ -42,19 +42,19 @@ export function RecurringExpenseList() {
         >
           <div className="flex items-center gap-2">
             <Repeat size={18} className="text-[#9B59B6]" />
-            <span className="text-sm font-bold text-[#1A1A2E]">
+            <span className="text-sm font-bold text-foreground">
               Recurring Expenses
             </span>
             {recurringExpenses.length > 0 && (
-              <span className="text-xs font-semibold text-[#6B6B80] bg-[#F0F0F4] rounded-full px-2 py-0.5">
+              <span className="text-xs font-semibold text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                 {recurringExpenses.length}
               </span>
             )}
           </div>
           {expanded ? (
-            <ChevronUp size={18} className="text-[#6B6B80]" />
+            <ChevronUp size={18} className="text-muted-foreground" />
           ) : (
-            <ChevronDown size={18} className="text-[#6B6B80]" />
+            <ChevronDown size={18} className="text-muted-foreground" />
           )}
         </button>
 
@@ -73,11 +73,11 @@ export function RecurringExpenseList() {
             </button>
 
             {recurringExpenses.length === 0 ? (
-              <p className="text-[#6B6B80] text-sm py-4 text-center">
+              <p className="text-muted-foreground text-sm py-4 text-center">
                 No recurring expenses yet
               </p>
             ) : (
-              <div className="divide-y divide-[#1A1A2E]/10">
+              <div className="divide-y divide-foreground/10">
                 {recurringExpenses.map((r) => {
                   const cat = CATEGORY_MAP[r.category];
                   return (
@@ -93,14 +93,14 @@ export function RecurringExpenseList() {
                       {/* Details */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-[#1A1A2E] truncate">
+                          <span className="text-sm font-semibold text-foreground truncate">
                             {r.description || cat.label}
                           </span>
                           <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#F0E4F7] text-[#9B59B6] shrink-0">
                             {FREQ_LABELS[r.frequency]}
                           </span>
                         </div>
-                        <span className="text-xs text-[#6B6B80]">
+                        <span className="text-xs text-muted-foreground">
                           {formatCurrency(r.amount)}
                         </span>
                       </div>
@@ -112,12 +112,12 @@ export function RecurringExpenseList() {
                           type="button"
                           onClick={() => toggleActive(r.id)}
                           className={`relative w-10 h-6 rounded-full transition-colors ${
-                            r.active ? "bg-[#2D9E8F]" : "bg-[#D1D1D6]"
+                            r.active ? "bg-primary" : "bg-muted-foreground/40"
                           }`}
                           title={r.active ? "Active" : "Paused"}
                         >
                           <span
-                            className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                            className={`absolute top-0.5 left-0.5 w-5 h-5 bg-card rounded-full shadow transition-transform ${
                               r.active ? "translate-x-4" : "translate-x-0"
                             }`}
                           />
@@ -126,15 +126,15 @@ export function RecurringExpenseList() {
                         <button
                           type="button"
                           onClick={() => handleEdit(r)}
-                          className="p-1.5 rounded-lg hover:bg-[#F0F0F4] transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-muted transition-colors"
                         >
-                          <Pencil size={14} className="text-[#6B6B80]" />
+                          <Pencil size={14} className="text-muted-foreground" />
                         </button>
 
                         <button
                           type="button"
                           onClick={() => deleteRecurring(r.id)}
-                          className="p-1.5 rounded-lg hover:bg-[#FDECEC] transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors"
                         >
                           <Trash2 size={14} className="text-[#E74C3C]" />
                         </button>

@@ -14,7 +14,7 @@ export function TabBar() {
   const toggleAddExpenseModal = useUIStore((s) => s.toggleAddExpenseModal);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t-2 border-[#1A1A2E]">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 bg-card border-t-2 border-border">
       <div className="mx-auto max-w-md flex items-center justify-around px-2 py-2">
         {/* First tab */}
         <TabButton
@@ -33,7 +33,7 @@ export function TabBar() {
         {/* Center plus button */}
         <button
           onClick={() => toggleAddExpenseModal(true)}
-          className="retro-btn flex items-center justify-center w-12 h-12 bg-[#2D9E8F] text-white -mt-5"
+          className="retro-btn flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground -mt-5"
           aria-label="Add expense"
         >
           <Plus className="w-6 h-6" />
@@ -69,8 +69,8 @@ function TabButton({
       onClick={onClick}
       className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors ${
         isActive
-          ? "text-[#2D9E8F]"
-          : "text-[#6B6B80] hover:text-[#1A1A2E]"
+          ? "text-primary"
+          : "text-muted-foreground hover:text-foreground"
       }`}
       aria-label={tab.label}
       aria-current={isActive ? "page" : undefined}

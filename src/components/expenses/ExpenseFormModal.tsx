@@ -83,9 +83,9 @@ export function ExpenseFormModal() {
         if (!open) handleClose();
       }}
     >
-      <DialogContent className="retro-card sm:max-w-[420px] p-0 gap-0 border-2 border-[#1A1A2E]">
+      <DialogContent className="retro-card sm:max-w-[420px] p-0 gap-0 border-2 border-border">
         <DialogHeader className="px-6 pt-6 pb-2">
-          <DialogTitle className="text-lg font-bold text-[#1A1A2E]">
+          <DialogTitle className="text-lg font-bold text-foreground">
             {isEditing ? "Edit Expense" : "Add Expense"}
           </DialogTitle>
         </DialogHeader>
@@ -93,11 +93,11 @@ export function ExpenseFormModal() {
         <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-5">
           {/* Amount */}
           <div className="space-y-2">
-            <Label htmlFor="amount" className="text-sm font-semibold text-[#1A1A2E]">
+            <Label htmlFor="amount" className="text-sm font-semibold text-foreground">
               Amount
             </Label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-mono-nums text-[#6B6B80]">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-mono-nums text-muted-foreground">
                 $
               </span>
               <Input
@@ -108,7 +108,7 @@ export function ExpenseFormModal() {
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="pl-10 text-3xl font-mono-nums h-16 border-2 border-[#1A1A2E] rounded-xl bg-white focus-visible:ring-[#2D9E8F]"
+                className="pl-10 text-3xl font-mono-nums h-16 border-2 border-border rounded-xl bg-card focus-visible:ring-primary"
                 required
                 autoFocus
               />
@@ -117,13 +117,13 @@ export function ExpenseFormModal() {
 
           {/* Category */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-[#1A1A2E]">Category</Label>
+            <Label className="text-sm font-semibold text-foreground">Category</Label>
             <CategoryPicker selected={category} onSelect={setCategory} />
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-semibold text-[#1A1A2E]">
+            <Label htmlFor="description" className="text-sm font-semibold text-foreground">
               Description
             </Label>
             <Input
@@ -132,13 +132,13 @@ export function ExpenseFormModal() {
               placeholder="What was this for?"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="border-2 border-[#1A1A2E] rounded-xl bg-white focus-visible:ring-[#2D9E8F]"
+              className="border-2 border-border rounded-xl bg-card focus-visible:ring-primary"
             />
           </div>
 
           {/* Date */}
           <div className="space-y-2">
-            <Label htmlFor="date" className="text-sm font-semibold text-[#1A1A2E]">
+            <Label htmlFor="date" className="text-sm font-semibold text-foreground">
               Date
             </Label>
             <Input
@@ -146,7 +146,7 @@ export function ExpenseFormModal() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="border-2 border-[#1A1A2E] rounded-xl bg-white focus-visible:ring-[#2D9E8F]"
+              className="border-2 border-border rounded-xl bg-card focus-visible:ring-primary"
               required
             />
           </div>
@@ -155,8 +155,7 @@ export function ExpenseFormModal() {
           <button
             type="submit"
             disabled={!amount || !category}
-            className="retro-btn w-full py-3 text-white font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ backgroundColor: "#2D9E8F" }}
+            className="retro-btn w-full py-3 bg-primary text-primary-foreground font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isEditing ? "Save Changes" : "Add Expense"}
           </button>

@@ -10,8 +10,8 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
   if (expenses.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <p className="text-[#6B6B80] text-sm">No expenses yet</p>
-        <p className="text-[#6B6B80]/60 text-xs mt-1">
+        <p className="text-muted-foreground text-sm">No expenses yet</p>
+        <p className="text-muted-foreground/60 text-xs mt-1">
           Tap "Add Expense" to get started
         </p>
       </div>
@@ -33,10 +33,10 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
     <div className="space-y-4">
       {sortedDates.map((date) => (
         <div key={date}>
-          <h3 className="text-xs font-semibold text-[#6B6B80] uppercase tracking-wider mb-1 px-1">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1 px-1">
             {formatDateFull(date)}
           </h3>
-          <div className="divide-y divide-[#1A1A2E]/10">
+          <div className="divide-y divide-foreground/10">
             {grouped[date].map((expense) => (
               <ExpenseItem key={expense.id} expense={expense} />
             ))}

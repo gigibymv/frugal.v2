@@ -43,8 +43,8 @@ export function CategoryPicker({ selected, onSelect }: CategoryPickerProps) {
             onClick={() => onSelect(cat.id)}
             className={`flex flex-col items-center gap-1.5 rounded-xl p-2.5 transition-all ${
               isSelected
-                ? "border-3 border-[#1A1A2E] scale-105 bg-white shadow-[2px_2px_0px_#1A1A2E]"
-                : "border-2 border-transparent hover:border-[#1A1A2E]/20"
+                ? "border-3 border-foreground scale-105 bg-card shadow-[2px_2px_0px_var(--foreground)]"
+                : "border-2 border-transparent hover:border-foreground/20"
             }`}
           >
             <div
@@ -53,7 +53,7 @@ export function CategoryPicker({ selected, onSelect }: CategoryPickerProps) {
             >
               {Icon && <Icon size={20} style={{ color: cat.color }} />}
             </div>
-            <span className="text-xs font-medium text-[#1A1A2E] leading-tight">
+            <span className="text-xs font-medium text-foreground leading-tight">
               {cat.label}
             </span>
           </button>
