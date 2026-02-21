@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CategoryId, Expense } from "@/types";
 import { isDateInRange } from "@/lib/date-utils";
+import { syncExpensesToSupabase } from "@/lib/sync";
+import { useAuthStore } from "@/store/authStore";
 
 interface ExpenseState {
   expenses: Expense[];
@@ -28,15 +30,25 @@ export const useExpenseStore = create<ExpenseState>()(
           id: crypto.randomUUID(),
           createdAt: new Date().toISOString(),
         };
-        set((state) => ({
-          expenses: [expense, ...state.expenses],
-        }));
+        set((state) => {
+          const newExpenses = [expense, ...state.expenses];
+          const user = useAuthStore.getState().user;
+          if (user) {
+            syncExpensesToSupabase(user.id, newExpenses);
+          }
+          return { expenses: newExpenses };
+        });
       },
 
       deleteExpense: (id) => {
-        set((state) => ({
-          expenses: state.expenses.filter((e) => e.id !== id),
-        }));
+        set((state) => {
+          const newExpenses = state.expenses.filter((e) => e.id !== id);
+          const user = useAuthStore.getState().user;
+          if (user) {
+            syncExpensesToSupabase(user.id, newExpenses);
+          }
+          return { expenses: newExpenses };
+        });
       },
 
       getWeeklyExpenses: (start, end) => {
