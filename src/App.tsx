@@ -11,7 +11,7 @@ import { ExpensesView } from "@/components/expenses/ExpensesView";
 import { AnalyticsView } from "@/components/analytics/AnalyticsView";
 import { AddExpenseModal } from "@/components/expenses/AddExpenseModal";
 import { EditBudgetModal } from "@/components/budget/EditBudgetModal";
-import { AuthModal } from "@/components/auth/AuthModal";
+import { AuthPage } from "@/components/auth/AuthPage";
 
 function ActiveView() {
   const activeTab = useUIStore((s) => s.activeTab);
@@ -31,6 +31,7 @@ function ActiveView() {
 export default function App() {
   const initialize = useAuthStore((s) => s.initialize);
   const user = useAuthStore((s) => s.user);
+  const authLoading = useAuthStore((s) => s.loading);
   const prevUserId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -48,6 +49,23 @@ export default function App() {
     }
   }, [user]);
 
+  if (authLoading) {
+    return (
+      <div className="min-h-dvh bg-[#FFF8F0] flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <h1 className="text-3xl font-black tracking-tight text-[#1A1A2E]">
+            Frugal
+          </h1>
+          <div className="w-6 h-6 border-2 border-[#2D9E8F] border-t-transparent rounded-full animate-spin mx-auto" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <AuthPage />;
+  }
+
   return (
     <>
       <Header />
@@ -58,7 +76,6 @@ export default function App() {
       <TabBar />
       <AddExpenseModal />
       <EditBudgetModal />
-      <AuthModal />
     </>
   );
 }

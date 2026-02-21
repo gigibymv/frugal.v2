@@ -9,6 +9,7 @@ interface AuthState {
   initialize: () => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithOAuth: (provider: "google") => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
 }
@@ -55,6 +56,21 @@ export const useAuthStore = create<AuthState>()((set) => ({
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
+    });
+    if (error) {
+      set({ error: error.message });
+    }
+  },
+
+  signInWithOAuth: async (provider) => {
+    if (!supabase) {
+      set({ error: "Supabase not configured" });
+      return;
+    }
+    set({ error: null });
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: window.location.origin },
     });
     if (error) {
       set({ error: error.message });
