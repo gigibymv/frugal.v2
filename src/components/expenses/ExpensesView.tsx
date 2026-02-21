@@ -16,10 +16,10 @@ export function ExpensesView() {
       <div className="retro-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-xs font-semibold text-[#6B6B80] uppercase tracking-wider">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Total Spent
             </p>
-            <p className="font-mono-nums text-2xl font-bold text-[#1A1A2E] mt-0.5">
+            <p className="font-mono-nums text-2xl font-bold text-foreground mt-0.5">
               {formatCurrency(spent)}
             </p>
           </div>
@@ -27,8 +27,7 @@ export function ExpensesView() {
           <button
             type="button"
             onClick={() => toggleModal(true)}
-            className="retro-btn flex items-center gap-2 px-4 py-2.5 text-white text-sm font-semibold"
-            style={{ backgroundColor: "#2D9E8F" }}
+            className="retro-btn flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground text-sm font-semibold"
           >
             <Plus size={18} />
             Add Expense

@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef } from "react";
 import { useUIStore } from "@/store/uiStore";
 import { useAuthStore } from "@/store/authStore";
 import { syncFromRemote } from "@/lib/sync";
+import { useRecurringExpenseStore } from "@/store/recurringExpenseStore";
 import { AppShell } from "@/components/layout/AppShell";
 import { Header } from "@/components/layout/Header";
 import { TabBar } from "@/components/layout/TabBar";
@@ -59,11 +60,13 @@ export default function App() {
     return unsub;
   }, []);
 
-  // Sync from remote when user logs in
+  // Sync from remote when user logs in, then generate due recurring expenses
   useEffect(() => {
     if (user && user.id !== prevUserId.current) {
       prevUserId.current = user.id;
-      syncFromRemote(user.id);
+      syncFromRemote(user.id).then(() => {
+        useRecurringExpenseStore.getState().generateDueExpenses();
+      });
     }
     if (!user) {
       prevUserId.current = null;

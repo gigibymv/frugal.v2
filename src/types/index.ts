@@ -23,6 +23,18 @@ export interface WeeklyBudget {
   updatedAt: string;
 }
 
+export interface RecurringExpense {
+  id: string;
+  amount: number;
+  category: CategoryId;
+  description: string;
+  frequency: "weekly" | "biweekly" | "monthly";
+  startDate: string; // ISO date
+  lastGenerated: string | null; // ISO date of last generated expense
+  active: boolean;
+  createdAt: string;
+}
+
 export type TabId = "dashboard" | "expenses" | "analytics";
 
 export interface CategoryConfig {
