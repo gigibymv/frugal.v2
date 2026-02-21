@@ -4,6 +4,7 @@ import { formatCurrency } from "@/lib/date-utils";
 import { Plus } from "lucide-react";
 import { ExpenseList } from "./ExpenseList";
 import { ExpenseFormModal } from "./ExpenseFormModal";
+import { RecurringExpenseList } from "./RecurringExpenseList";
 
 export function ExpensesView() {
   const { spent, expenses } = useWeekData();
@@ -35,6 +36,9 @@ export function ExpensesView() {
         </div>
       </div>
 
+      {/* Recurring expenses */}
+      <RecurringExpenseList />
+
       {/* Expense list */}
       <div className="retro-card p-5">
         <ExpenseList expenses={expenses} />
@@ -45,3 +49,5 @@ export function ExpensesView() {
     </div>
   );
 }
+
+export default ExpensesView;

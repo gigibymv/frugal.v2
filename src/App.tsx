@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { useUIStore } from "@/store/uiStore";
 import { useAuthStore } from "@/store/authStore";
 import { syncFromRemote } from "@/lib/sync";
@@ -6,26 +6,34 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Header } from "@/components/layout/Header";
 import { TabBar } from "@/components/layout/TabBar";
 import { WeekNavigator } from "@/components/dashboard/WeekNavigator";
-import { DashboardView } from "@/components/dashboard/DashboardView";
-import { ExpensesView } from "@/components/expenses/ExpensesView";
-import { AnalyticsView } from "@/components/analytics/AnalyticsView";
 import { ExpenseFormModal } from "@/components/expenses/ExpenseFormModal";
 import { EditBudgetModal } from "@/components/budget/EditBudgetModal";
 import { AuthPage } from "@/components/auth/AuthPage";
 
+const DashboardView = lazy(() => import("@/components/dashboard/DashboardView"));
+const ExpensesView = lazy(() => import("@/components/expenses/ExpensesView"));
+const AnalyticsView = lazy(() => import("@/components/analytics/AnalyticsView"));
+
+const ViewSpinner = () => (
+  <div className="flex justify-center py-12">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
+
 function ActiveView() {
   const activeTab = useUIStore((s) => s.activeTab);
 
-  switch (activeTab) {
-    case "dashboard":
-      return <DashboardView />;
-    case "expenses":
-      return <ExpensesView />;
-    case "analytics":
-      return <AnalyticsView />;
-    default:
-      return <DashboardView />;
-  }
+  return (
+    <Suspense fallback={<ViewSpinner />}>
+      {activeTab === "expenses" ? (
+        <ExpensesView />
+      ) : activeTab === "analytics" ? (
+        <AnalyticsView />
+      ) : (
+        <DashboardView />
+      )}
+    </Suspense>
+  );
 }
 
 export default function App() {
@@ -37,6 +45,19 @@ export default function App() {
   useEffect(() => {
     initialize();
   }, [initialize]);
+
+  // Apply dark mode class to document
+  useEffect(() => {
+    const applyDark = (dark: boolean) => {
+      document.documentElement.classList.toggle("dark", dark);
+    };
+    applyDark(useUIStore.getState().darkMode);
+    const unsub = useUIStore.subscribe(
+      (state) => state.darkMode,
+      (dark) => applyDark(dark),
+    );
+    return unsub;
+  }, []);
 
   // Sync from remote when user logs in
   useEffect(() => {
@@ -51,12 +72,12 @@ export default function App() {
 
   if (authLoading) {
     return (
-      <div className="min-h-dvh bg-[#FFF8F0] flex items-center justify-center">
+      <div className="min-h-dvh bg-background flex items-center justify-center">
         <div className="text-center space-y-3">
-          <h1 className="text-3xl font-black tracking-tight text-[#1A1A2E]">
+          <h1 className="text-3xl font-black tracking-tight text-foreground">
             Frugal
           </h1>
-          <div className="w-6 h-6 border-2 border-[#2D9E8F] border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
         </div>
       </div>
     );
