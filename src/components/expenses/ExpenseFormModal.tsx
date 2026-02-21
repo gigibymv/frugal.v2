@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CategoryId } from "@/types";
 import { todayISO } from "@/lib/date-utils";
 import { useExpenseStore } from "@/store/expenseStore";
@@ -13,15 +13,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CategoryPicker } from "./CategoryPicker";
 
-export function AddExpenseModal() {
-  const showModal = useUIStore((s) => s.showAddExpenseModal);
-  const toggleModal = useUIStore((s) => s.toggleAddExpenseModal);
+export function ExpenseFormModal() {
+  const showAddModal = useUIStore((s) => s.showAddExpenseModal);
+  const toggleAddModal = useUIStore((s) => s.toggleAddExpenseModal);
+  const editingExpense = useUIStore((s) => s.editingExpense);
+  const setEditingExpense = useUIStore((s) => s.setEditingExpense);
   const addExpense = useExpenseStore((s) => s.addExpense);
+  const editExpense = useExpenseStore((s) => s.editExpense);
+
+  const isEditing = editingExpense !== null;
+  const isOpen = showAddModal || isEditing;
 
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<CategoryId | null>(null);
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(todayISO());
+
+  useEffect(() => {
+    if (editingExpense) {
+      setAmount(String(editingExpense.amount));
+      setCategory(editingExpense.category);
+      setDescription(editingExpense.description);
+      setDate(editingExpense.date);
+    }
+  }, [editingExpense]);
 
   function resetForm() {
     setAmount("");
@@ -30,35 +45,48 @@ export function AddExpenseModal() {
     setDate(todayISO());
   }
 
+  function handleClose() {
+    resetForm();
+    if (isEditing) {
+      setEditingExpense(null);
+    } else {
+      toggleAddModal(false);
+    }
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     const parsedAmount = parseFloat(amount);
     if (!parsedAmount || parsedAmount <= 0 || !category) return;
 
-    addExpense({
+    const data = {
       amount: parsedAmount,
       category,
       description,
       date,
-    });
+    };
 
-    resetForm();
-    toggleModal(false);
+    if (isEditing) {
+      editExpense(editingExpense.id, data);
+    } else {
+      addExpense(data);
+    }
+
+    handleClose();
   }
 
   return (
     <Dialog
-      open={showModal}
+      open={isOpen}
       onOpenChange={(open) => {
-        if (!open) resetForm();
-        toggleModal(open);
+        if (!open) handleClose();
       }}
     >
       <DialogContent className="retro-card sm:max-w-[420px] p-0 gap-0 border-2 border-[#1A1A2E]">
         <DialogHeader className="px-6 pt-6 pb-2">
           <DialogTitle className="text-lg font-bold text-[#1A1A2E]">
-            Add Expense
+            {isEditing ? "Edit Expense" : "Add Expense"}
           </DialogTitle>
         </DialogHeader>
 
@@ -130,7 +158,7 @@ export function AddExpenseModal() {
             className="retro-btn w-full py-3 text-white font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: "#2D9E8F" }}
           >
-            Add Expense
+            {isEditing ? "Save Changes" : "Add Expense"}
           </button>
         </form>
       </DialogContent>

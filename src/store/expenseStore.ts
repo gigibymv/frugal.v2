@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 interface ExpenseState {
   expenses: Expense[];
   addExpense: (data: Omit<Expense, "id" | "createdAt">) => void;
+  editExpense: (id: string, data: Omit<Expense, "id" | "createdAt">) => void;
   deleteExpense: (id: string) => void;
   getWeeklyExpenses: (start: Date, end: Date) => Expense[];
   getWeeklyTotal: (start: Date, end: Date) => number;
@@ -32,6 +33,19 @@ export const useExpenseStore = create<ExpenseState>()(
         };
         set((state) => {
           const newExpenses = [expense, ...state.expenses];
+          const user = useAuthStore.getState().user;
+          if (user) {
+            syncExpensesToSupabase(user.id, newExpenses);
+          }
+          return { expenses: newExpenses };
+        });
+      },
+
+      editExpense: (id, data) => {
+        set((state) => {
+          const newExpenses = state.expenses.map((e) =>
+            e.id === id ? { ...e, ...data } : e
+          );
           const user = useAuthStore.getState().user;
           if (user) {
             syncExpensesToSupabase(user.id, newExpenses);

@@ -2,6 +2,7 @@ import type { Expense } from "@/types";
 import { CATEGORY_MAP } from "@/lib/constants";
 import { formatCurrency, formatDateFull } from "@/lib/date-utils";
 import { useExpenseStore } from "@/store/expenseStore";
+import { useUIStore } from "@/store/uiStore";
 import { Trash2 } from "lucide-react";
 import {
   ShoppingCart,
@@ -33,28 +34,35 @@ interface ExpenseItemProps {
 
 export function ExpenseItem({ expense }: ExpenseItemProps) {
   const deleteExpense = useExpenseStore((s) => s.deleteExpense);
+  const setEditingExpense = useUIStore((s) => s.setEditingExpense);
   const cat = CATEGORY_MAP[expense.category];
   const Icon = ICON_MAP[cat.icon];
 
   return (
     <div className="group flex items-center gap-3 py-3 px-1">
-      <div
-        className="flex items-center justify-center w-9 h-9 rounded-full shrink-0"
-        style={{ backgroundColor: cat.bgColor }}
+      <button
+        type="button"
+        onClick={() => setEditingExpense(expense)}
+        className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer"
       >
-        {Icon && <Icon size={18} style={{ color: cat.color }} />}
-      </div>
+        <div
+          className="flex items-center justify-center w-9 h-9 rounded-full shrink-0"
+          style={{ backgroundColor: cat.bgColor }}
+        >
+          {Icon && <Icon size={18} style={{ color: cat.color }} />}
+        </div>
 
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#1A1A2E] truncate">
-          {expense.description || cat.label}
-        </p>
-        <p className="text-xs text-[#6B6B80]">{formatDateFull(expense.date)}</p>
-      </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-[#1A1A2E] truncate">
+            {expense.description || cat.label}
+          </p>
+          <p className="text-xs text-[#6B6B80]">{formatDateFull(expense.date)}</p>
+        </div>
 
-      <span className="font-mono-nums text-sm font-semibold text-[#1A1A2E] shrink-0">
-        {formatCurrency(expense.amount)}
-      </span>
+        <span className="font-mono-nums text-sm font-semibold text-[#1A1A2E] shrink-0">
+          {formatCurrency(expense.amount)}
+        </span>
+      </button>
 
       <button
         type="button"

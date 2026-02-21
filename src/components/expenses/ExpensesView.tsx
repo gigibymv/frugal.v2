@@ -3,7 +3,7 @@ import { useUIStore } from "@/store/uiStore";
 import { formatCurrency } from "@/lib/date-utils";
 import { Plus } from "lucide-react";
 import { ExpenseList } from "./ExpenseList";
-import { AddExpenseModal } from "./AddExpenseModal";
+import { ExpenseFormModal } from "./ExpenseFormModal";
 
 export function ExpensesView() {
   const { spent, expenses } = useWeekData();
@@ -41,7 +41,7 @@ export function ExpensesView() {
       </div>
 
       {/* Modal */}
-      <AddExpenseModal />
+      <ExpenseFormModal />
     </div>
   );
 }

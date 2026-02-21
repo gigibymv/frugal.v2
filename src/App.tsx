@@ -9,7 +9,7 @@ import { WeekNavigator } from "@/components/dashboard/WeekNavigator";
 import { DashboardView } from "@/components/dashboard/DashboardView";
 import { ExpensesView } from "@/components/expenses/ExpensesView";
 import { AnalyticsView } from "@/components/analytics/AnalyticsView";
-import { AddExpenseModal } from "@/components/expenses/AddExpenseModal";
+import { ExpenseFormModal } from "@/components/expenses/ExpenseFormModal";
 import { EditBudgetModal } from "@/components/budget/EditBudgetModal";
 import { AuthPage } from "@/components/auth/AuthPage";
 
@@ -74,7 +74,7 @@ export default function App() {
         <ActiveView />
       </AppShell>
       <TabBar />
-      <AddExpenseModal />
+      <ExpenseFormModal />
       <EditBudgetModal />
     </>
   );
