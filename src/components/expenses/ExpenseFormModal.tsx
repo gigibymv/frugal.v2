@@ -28,6 +28,7 @@ export function ExpenseFormModal() {
   const [category, setCategory] = useState<CategoryId | null>(null);
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(todayISO());
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (editingExpense) {
@@ -43,6 +44,7 @@ export function ExpenseFormModal() {
     setCategory(null);
     setDescription("");
     setDate(todayISO());
+    setError("");
   }
 
   function handleClose() {
@@ -58,12 +60,20 @@ export function ExpenseFormModal() {
     e.preventDefault();
 
     const parsedAmount = parseFloat(amount);
-    if (!parsedAmount || parsedAmount <= 0 || !category) return;
+    if (!parsedAmount || isNaN(parsedAmount) || parsedAmount <= 0) {
+      setError("Amount must be greater than $0");
+      return;
+    }
+    if (!category) {
+      setError("Please select a category");
+      return;
+    }
+    setError("");
 
     const data = {
-      amount: parsedAmount,
+      amount: Math.round(parsedAmount * 100) / 100,
       category,
-      description,
+      description: description.slice(0, 100),
       date,
     };
 
@@ -132,6 +142,7 @@ export function ExpenseFormModal() {
               placeholder="What was this for?"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              maxLength={100}
               className="border-2 border-border rounded-xl bg-card focus-visible:ring-primary"
             />
           </div>
@@ -151,11 +162,15 @@ export function ExpenseFormModal() {
             />
           </div>
 
+          {/* Error */}
+          {error && (
+            <p className="text-sm text-destructive font-medium">{error}</p>
+          )}
+
           {/* Submit */}
           <button
             type="submit"
-            disabled={!amount || !category}
-            className="retro-btn w-full py-3 bg-primary text-primary-foreground font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            className="retro-btn w-full py-3 bg-primary text-primary-foreground font-semibold text-base"
           >
             {isEditing ? "Save Changes" : "Add Expense"}
           </button>

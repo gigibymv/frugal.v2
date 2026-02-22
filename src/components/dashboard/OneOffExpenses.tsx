@@ -83,7 +83,7 @@ export function OneOffExpenses() {
                   <button
                     type="button"
                     onClick={() => deleteOneOffExpense(expense.id)}
-                    className="opacity-40 hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-red-50 text-[#E74C3C] shrink-0"
+                    className="opacity-40 hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-destructive/10 text-destructive shrink-0"
                     aria-label="Delete expense"
                   >
                     <Trash2 size={16} />

@@ -57,6 +57,8 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-recurring: var(--recurring);
+  --color-recurring-bg: var(--recurring-bg);
   --font-sans: "DM Sans", system-ui, sans-serif;
   --font-mono: "Space Mono", ui-monospace, monospace;
 }
@@ -86,6 +88,8 @@
   --chart-3: #F4D35E;
   --chart-4: #FF8C42;
   --chart-5: #5B8DEF;
+  --recurring: #9B59B6;
+  --recurring-bg: #F0E4F7;
   --sidebar: #FFF8F0;
   --sidebar-foreground: #1A1A2E;
   --sidebar-primary: #2D9E8F;
@@ -120,6 +124,8 @@
   --chart-3: #F4D35E;
   --chart-4: #FF8C42;
   --chart-5: #5B8DEF;
+  --recurring: #BB86FC;
+  --recurring-bg: #2D1B4E;
   --sidebar: #0F0F1A;
   --sidebar-foreground: #E8E6F0;
   --sidebar-primary: #3BB5A5;

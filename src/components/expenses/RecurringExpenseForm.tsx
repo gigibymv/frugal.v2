@@ -33,6 +33,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
   const [description, setDescription] = useState("");
   const [frequency, setFrequency] = useState<RecurringExpense["frequency"]>("monthly");
   const [startDate, setStartDate] = useState(todayISO());
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (editing) {
@@ -50,6 +51,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
     setDescription("");
     setFrequency("monthly");
     setStartDate(todayISO());
+    setError("");
   }
 
   function handleClose() {
@@ -61,21 +63,31 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
     e.preventDefault();
 
     const parsedAmount = parseFloat(amount);
-    if (!parsedAmount || parsedAmount <= 0 || !category) return;
+    if (!parsedAmount || isNaN(parsedAmount) || parsedAmount <= 0) {
+      setError("Amount must be greater than $0");
+      return;
+    }
+    if (!category) {
+      setError("Please select a category");
+      return;
+    }
+    setError("");
+
+    const roundedAmount = Math.round(parsedAmount * 100) / 100;
 
     if (editing) {
       editRecurring(editing.id, {
-        amount: parsedAmount,
+        amount: roundedAmount,
         category,
-        description,
+        description: description.slice(0, 100),
         frequency,
         startDate,
       });
     } else {
       addRecurring({
-        amount: parsedAmount,
+        amount: roundedAmount,
         category,
-        description,
+        description: description.slice(0, 100),
         frequency,
         startDate,
         active: true,
@@ -141,6 +153,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
               placeholder="e.g. Netflix subscription"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              maxLength={100}
               className="border-2 border-border rounded-xl bg-card focus-visible:ring-primary"
             />
           </div>
@@ -181,11 +194,15 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
             />
           </div>
 
+          {/* Error */}
+          {error && (
+            <p className="text-sm text-destructive font-medium">{error}</p>
+          )}
+
           {/* Submit */}
           <button
             type="submit"
-            disabled={!amount || !category}
-            className="retro-btn w-full py-3 bg-primary text-primary-foreground font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            className="retro-btn w-full py-3 bg-primary text-primary-foreground font-semibold text-base"
           >
             {editing ? "Save Changes" : "Add Recurring Expense"}
           </button>

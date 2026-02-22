@@ -41,7 +41,7 @@ export function RecurringExpenseList() {
           className="flex items-center justify-between w-full"
         >
           <div className="flex items-center gap-2">
-            <Repeat size={18} className="text-[#9B59B6]" />
+            <Repeat size={18} className="text-recurring" />
             <span className="text-sm font-bold text-foreground">
               Recurring Expenses
             </span>
@@ -65,8 +65,7 @@ export function RecurringExpenseList() {
             <button
               type="button"
               onClick={() => setShowForm(true)}
-              className="retro-btn flex items-center gap-2 px-3 py-2 text-white text-xs font-semibold"
-              style={{ backgroundColor: "#9B59B6" }}
+              className="retro-btn flex items-center gap-2 px-3 py-2 text-white text-xs font-semibold bg-recurring"
             >
               <Plus size={14} />
               Add Recurring
@@ -96,7 +95,7 @@ export function RecurringExpenseList() {
                           <span className="text-sm font-semibold text-foreground truncate">
                             {r.description || cat.label}
                           </span>
-                          <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#F0E4F7] text-[#9B59B6] shrink-0">
+                          <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-recurring-bg text-recurring shrink-0">
                             {FREQ_LABELS[r.frequency]}
                           </span>
                         </div>
@@ -136,7 +135,7 @@ export function RecurringExpenseList() {
                           onClick={() => deleteRecurring(r.id)}
                           className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors"
                         >
-                          <Trash2 size={14} className="text-[#E74C3C]" />
+                          <Trash2 size={14} className="text-destructive" />
                         </button>
                       </div>
                     </div>

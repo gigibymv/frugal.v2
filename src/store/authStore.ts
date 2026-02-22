@@ -30,8 +30,12 @@ export const useAuthStore = create<AuthState>()((set) => ({
     } = await supabase.auth.getSession();
     set({ user: session?.user ?? null, loading: false });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange((event, session) => {
       set({ user: session?.user ?? null });
+      // Clean up OAuth URL fragments after sign in
+      if (event === "SIGNED_IN" && window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
     });
   },
 
@@ -80,9 +84,12 @@ export const useAuthStore = create<AuthState>()((set) => ({
   signOut: async () => {
     if (!supabase) return;
     await supabase.auth.signOut();
-    // Clear local storage for stores
+    // Clear local storage for user-specific stores (keep frugal-dark-mode as UI preference)
     localStorage.removeItem("weekly-budget-budget");
     localStorage.removeItem("weekly-budget-expenses");
+    localStorage.removeItem("weekly-budget-recurring");
+    localStorage.removeItem("frugal-oneoff-expenses");
+    localStorage.removeItem("frugal-settings");
     set({ user: null });
   },
 

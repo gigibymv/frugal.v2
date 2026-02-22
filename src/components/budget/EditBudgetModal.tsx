@@ -13,11 +13,11 @@ import { formatCurrency } from "@/lib/date-utils";
 const PRESET_AMOUNTS = [200, 300, 500, 750, 1000];
 
 const PRESET_COLORS = [
-  { bg: "bg-[#E0F5F1]", border: "border-[#2D9E8F]", text: "text-[#2D9E8F]" },
-  { bg: "bg-[#E0EAFF]", border: "border-[#5B8DEF]", text: "text-[#5B8DEF]" },
-  { bg: "bg-[#FFF8E0]", border: "border-[#F4D35E]", text: "text-foreground" },
-  { bg: "bg-[#FFE0F0]", border: "border-[#E91E8C]", text: "text-[#E91E8C]" },
-  { bg: "bg-[#FFF0E0]", border: "border-[#FF8C42]", text: "text-[#FF8C42]" },
+  { bg: "bg-[#E0F5F1] dark:bg-[#2D9E8F]/20", border: "border-[#2D9E8F]", text: "text-[#2D9E8F] dark:text-[#3BB5A5]" },
+  { bg: "bg-[#E0EAFF] dark:bg-[#5B8DEF]/20", border: "border-[#5B8DEF]", text: "text-[#5B8DEF]" },
+  { bg: "bg-[#FFF8E0] dark:bg-[#F4D35E]/20", border: "border-[#F4D35E]", text: "text-foreground" },
+  { bg: "bg-[#FFE0F0] dark:bg-[#E91E8C]/20", border: "border-[#E91E8C]", text: "text-[#E91E8C]" },
+  { bg: "bg-[#FFF0E0] dark:bg-[#FF8C42]/20", border: "border-[#FF8C42]", text: "text-[#FF8C42]" },
 ];
 
 export function EditBudgetModal() {

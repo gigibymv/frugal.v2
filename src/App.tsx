@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
+import { Plus } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
 import { useAuthStore } from "@/store/authStore";
 import { syncFromRemote } from "@/lib/sync";
@@ -69,6 +70,9 @@ export default function App() {
       syncFromRemote(user.id).then(() => {
         useRecurringExpenseStore.getState().generateDueExpenses();
       });
+    } else if (user && user.id === prevUserId.current) {
+      // Same user revisiting — still regenerate due expenses
+      useRecurringExpenseStore.getState().generateDueExpenses();
     }
     if (!user) {
       prevUserId.current = null;
@@ -100,6 +104,20 @@ export default function App() {
         <ActiveView />
       </AppShell>
       <TabBar />
+
+      {/* Floating Action Button */}
+      <button
+        onClick={() => useUIStore.getState().toggleAddExpenseModal(true)}
+        className="retro-btn fixed z-30 flex items-center justify-center w-14 h-14 rounded-full bg-primary text-primary-foreground"
+        style={{
+          bottom: "calc(4.5rem + env(safe-area-inset-bottom, 0px))",
+          right: "max(1.25rem, calc((100vw - 28rem) / 2 + 1.25rem))",
+        }}
+        aria-label="Add expense"
+      >
+        <Plus className="w-6 h-6" />
+      </button>
+
       <ExpenseFormModal />
       <OneOffExpenseFormModal />
       <EditBudgetModal />

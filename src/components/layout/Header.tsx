@@ -1,10 +1,9 @@
-import { LogOut, User, Plus } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
 import { useAuthStore } from "@/store/authStore";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export function Header() {
-  const toggleAddExpenseModal = useUIStore((s) => s.toggleAddExpenseModal);
   const toggleSettingsModal = useUIStore((s) => s.toggleSettingsModal);
   const user = useAuthStore((s) => s.user);
   const signOut = useAuthStore((s) => s.signOut);
@@ -13,18 +12,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-30 bg-background border-b-2 border-border" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
       <div className="mx-auto max-w-md flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold tracking-tight text-foreground">
-            Frugal
-          </h1>
-          <button
-            onClick={() => toggleAddExpenseModal(true)}
-            className="retro-btn p-2 bg-primary text-primary-foreground"
-            aria-label="Add expense"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
-        </div>
+        <h1 className="text-xl font-bold tracking-tight text-foreground">
+          Frugal
+        </h1>
 
         <div className="flex items-center gap-1">
           <button
