@@ -2,13 +2,15 @@ import { useMemo } from "react";
 import { useBudgetStore } from "@/store/budgetStore";
 import { useExpenseStore } from "@/store/expenseStore";
 import { useUIStore } from "@/store/uiStore";
+import { useSettingsStore } from "@/store/settingsStore";
 import { getWeekRange } from "@/lib/date-utils";
 
 export function useWeekData() {
   const selectedWeekOffset = useUIStore((s) => s.selectedWeekOffset);
+  const weekStartDay = useSettingsStore((s) => s.weekStartDay);
   const { start, end } = useMemo(
-    () => getWeekRange(selectedWeekOffset),
-    [selectedWeekOffset]
+    () => getWeekRange(selectedWeekOffset, weekStartDay as 0 | 1 | 2 | 3 | 4 | 5 | 6),
+    [selectedWeekOffset, weekStartDay]
   );
 
   const budgetHistory = useBudgetStore((s) => s.budgetHistory);

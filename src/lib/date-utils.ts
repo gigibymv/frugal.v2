@@ -1,18 +1,18 @@
 import { startOfWeek, endOfWeek, addWeeks, format, isWithinInterval, parseISO } from "date-fns";
 
-export function getWeekRange(offset: number = 0) {
+export function getWeekRange(offset: number = 0, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 1) {
   const now = new Date();
   const target = addWeeks(now, offset);
-  const start = startOfWeek(target, { weekStartsOn: 1 }); // Monday
-  const end = endOfWeek(target, { weekStartsOn: 1 }); // Sunday
+  const start = startOfWeek(target, { weekStartsOn });
+  const end = endOfWeek(target, { weekStartsOn });
   return { start, end };
 }
 
-export function formatWeekLabel(offset: number): string {
+export function formatWeekLabel(offset: number, weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 1): string {
   if (offset === 0) return "This Week";
   if (offset === -1) return "Last Week";
   if (offset === 1) return "Next Week";
-  const { start, end } = getWeekRange(offset);
+  const { start, end } = getWeekRange(offset, weekStartsOn);
   return `${format(start, "MMM d")} – ${format(end, "MMM d")}`;
 }
 

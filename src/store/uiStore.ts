@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import type { Expense, TabId } from "@/types";
+import type { Expense, TabId, OneOffExpense } from "@/types";
 import { getWeekRange } from "@/lib/date-utils";
+import { useSettingsStore } from "@/store/settingsStore";
 
 interface UIState {
   activeTab: TabId;
@@ -10,6 +11,9 @@ interface UIState {
   editingExpense: Expense | null;
   selectedWeekOffset: number;
   darkMode: boolean;
+  showSettingsModal: boolean;
+  showOneOffExpenseModal: boolean;
+  editingOneOffExpense: OneOffExpense | null;
   setActiveTab: (tab: TabId) => void;
   toggleAddExpenseModal: (show?: boolean) => void;
   toggleEditBudgetModal: (show?: boolean) => void;
@@ -17,6 +21,9 @@ interface UIState {
   setWeekOffset: (offset: number) => void;
   getWeekRange: () => { start: Date; end: Date };
   toggleDarkMode: () => void;
+  toggleSettingsModal: (show?: boolean) => void;
+  toggleOneOffExpenseModal: (show?: boolean) => void;
+  setEditingOneOffExpense: (expense: OneOffExpense | null) => void;
 }
 
 export const useUIStore = create<UIState>()(subscribeWithSelector((set, get) => ({
@@ -26,6 +33,9 @@ export const useUIStore = create<UIState>()(subscribeWithSelector((set, get) => 
   editingExpense: null,
   selectedWeekOffset: 0,
   darkMode: localStorage.getItem("frugal-dark-mode") === "true",
+  showSettingsModal: false,
+  showOneOffExpenseModal: false,
+  editingOneOffExpense: null,
 
   setActiveTab: (tab) => set({ activeTab: tab }),
 
@@ -43,7 +53,10 @@ export const useUIStore = create<UIState>()(subscribeWithSelector((set, get) => 
 
   setWeekOffset: (offset) => set({ selectedWeekOffset: offset }),
 
-  getWeekRange: () => getWeekRange(get().selectedWeekOffset),
+  getWeekRange: () => {
+    const weekStartDay = useSettingsStore.getState().weekStartDay as 0 | 1 | 2 | 3 | 4 | 5 | 6;
+    return getWeekRange(get().selectedWeekOffset, weekStartDay);
+  },
 
   toggleDarkMode: () =>
     set((state) => {
@@ -51,4 +64,16 @@ export const useUIStore = create<UIState>()(subscribeWithSelector((set, get) => 
       localStorage.setItem("frugal-dark-mode", String(next));
       return { darkMode: next };
     }),
+
+  toggleSettingsModal: (show) =>
+    set((state) => ({
+      showSettingsModal: show !== undefined ? show : !state.showSettingsModal,
+    })),
+
+  toggleOneOffExpenseModal: (show) =>
+    set((state) => ({
+      showOneOffExpenseModal: show !== undefined ? show : !state.showOneOffExpenseModal,
+    })),
+
+  setEditingOneOffExpense: (expense) => set({ editingOneOffExpense: expense }),
 })));

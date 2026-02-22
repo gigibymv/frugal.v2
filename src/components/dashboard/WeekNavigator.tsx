@@ -1,14 +1,16 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
+import { useSettingsStore } from "@/store/settingsStore";
 import { formatWeekLabel, getWeekRange } from "@/lib/date-utils";
 import { format } from "date-fns";
 
 export function WeekNavigator() {
   const selectedWeekOffset = useUIStore((s) => s.selectedWeekOffset);
   const setWeekOffset = useUIStore((s) => s.setWeekOffset);
+  const weekStartDay = useSettingsStore((s) => s.weekStartDay);
 
-  const label = formatWeekLabel(selectedWeekOffset);
-  const { start, end } = getWeekRange(selectedWeekOffset);
+  const label = formatWeekLabel(selectedWeekOffset, weekStartDay as 0 | 1 | 2 | 3 | 4 | 5 | 6);
+  const { start, end } = getWeekRange(selectedWeekOffset, weekStartDay as 0 | 1 | 2 | 3 | 4 | 5 | 6);
   const dateRange = `${format(start, "MMM d")} – ${format(end, "MMM d")}`;
 
   return (

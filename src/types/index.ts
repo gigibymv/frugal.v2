@@ -44,3 +44,14 @@ export interface CategoryConfig {
   color: string;
   bgColor: string;
 }
+
+export type OneOffCategoryId = "gifts" | "shopping" | "entertainment" | "travel" | "other";
+
+export interface OneOffExpense {
+  id: string;
+  amount: number;
+  category: OneOffCategoryId;
+  description: string;
+  date: string; // ISO date string
+  createdAt: string;
+}

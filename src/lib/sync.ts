@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { Expense, RecurringExpense, WeeklyBudget } from "@/types";
+import type { Expense, OneOffExpense, RecurringExpense, WeeklyBudget } from "@/types";
 
 export async function syncBudgetsToSupabase(
   userId: string,
@@ -139,16 +139,58 @@ export async function fetchRecurringFromSupabase(
   }));
 }
 
+export async function syncOneOffExpensesToSupabase(
+  userId: string,
+  expenses: OneOffExpense[]
+) {
+  if (!supabase) return;
+  const rows = expenses.map((e) => ({
+    id: e.id,
+    user_id: userId,
+    amount: e.amount,
+    category: e.category,
+    description: e.description,
+    date: e.date,
+    created_at: e.createdAt,
+  }));
+  await supabase.from("oneoff_expenses").delete().eq("user_id", userId);
+  if (rows.length > 0) {
+    await supabase.from("oneoff_expenses").insert(rows);
+  }
+}
+
+export async function fetchOneOffExpensesFromSupabase(
+  userId: string
+): Promise<OneOffExpense[]> {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("oneoff_expenses")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+  if (error || !data) return [];
+  return data.map((row) => ({
+    id: row.id,
+    amount: Number(row.amount),
+    category: row.category,
+    description: row.description || "",
+    date: row.date,
+    createdAt: row.created_at,
+  }));
+}
+
 export async function syncFromRemote(userId: string) {
-  const [budgets, expenses, recurring] = await Promise.all([
+  const [budgets, expenses, recurring, oneOffExpenses] = await Promise.all([
     fetchBudgetsFromSupabase(userId),
     fetchExpensesFromSupabase(userId),
     fetchRecurringFromSupabase(userId),
+    fetchOneOffExpensesFromSupabase(userId),
   ]);
 
   const { useBudgetStore } = await import("@/store/budgetStore");
   const { useExpenseStore } = await import("@/store/expenseStore");
   const { useRecurringExpenseStore } = await import("@/store/recurringExpenseStore");
+  const { useOneOffExpenseStore } = await import("@/store/oneOffExpenseStore");
 
   if (budgets.length > 0) {
     useBudgetStore.setState({ budgetHistory: budgets });
@@ -159,20 +201,26 @@ export async function syncFromRemote(userId: string) {
   if (recurring.length > 0) {
     useRecurringExpenseStore.setState({ recurringExpenses: recurring });
   }
+  if (oneOffExpenses.length > 0) {
+    useOneOffExpenseStore.setState({ oneOffExpenses });
+  }
 }
 
 export async function syncToRemote(userId: string) {
   const { useBudgetStore } = await import("@/store/budgetStore");
   const { useExpenseStore } = await import("@/store/expenseStore");
   const { useRecurringExpenseStore } = await import("@/store/recurringExpenseStore");
+  const { useOneOffExpenseStore } = await import("@/store/oneOffExpenseStore");
 
   const budgetHistory = useBudgetStore.getState().budgetHistory;
   const expenses = useExpenseStore.getState().expenses;
   const recurringExpenses = useRecurringExpenseStore.getState().recurringExpenses;
+  const oneOffExpenses = useOneOffExpenseStore.getState().oneOffExpenses;
 
   await Promise.all([
     syncBudgetsToSupabase(userId, budgetHistory),
     syncExpensesToSupabase(userId, expenses),
     syncRecurringToSupabase(userId, recurringExpenses),
+    syncOneOffExpensesToSupabase(userId, oneOffExpenses),
   ]);
 }

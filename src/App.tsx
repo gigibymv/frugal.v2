@@ -8,7 +8,9 @@ import { Header } from "@/components/layout/Header";
 import { TabBar } from "@/components/layout/TabBar";
 import { WeekNavigator } from "@/components/dashboard/WeekNavigator";
 import { ExpenseFormModal } from "@/components/expenses/ExpenseFormModal";
+import { OneOffExpenseFormModal } from "@/components/expenses/OneOffExpenseFormModal";
 import { EditBudgetModal } from "@/components/budget/EditBudgetModal";
+import { SettingsModal } from "@/components/settings/SettingsModal";
 import { AuthPage } from "@/components/auth/AuthPage";
 
 const DashboardView = lazy(() => import("@/components/dashboard/DashboardView"));
@@ -99,7 +101,9 @@ export default function App() {
       </AppShell>
       <TabBar />
       <ExpenseFormModal />
+      <OneOffExpenseFormModal />
       <EditBudgetModal />
+      <SettingsModal />
     </>
   );
 }

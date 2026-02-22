@@ -1,6 +1,7 @@
 import { BudgetCard } from "./BudgetCard";
 import { QuickAddExpense } from "./QuickAddExpense";
 import { RecentExpenses } from "./RecentExpenses";
+import { OneOffExpenses } from "./OneOffExpenses";
 
 export function DashboardView() {
   return (
@@ -13,6 +14,9 @@ export function DashboardView() {
       </section>
       <section>
         <RecentExpenses />
+      </section>
+      <section>
+        <OneOffExpenses />
       </section>
     </div>
   );

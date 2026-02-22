@@ -1,4 +1,4 @@
-import type { CategoryConfig, CategoryId } from "@/types";
+import type { CategoryConfig, CategoryId, OneOffCategoryId } from "@/types";
 
 export const CATEGORIES: CategoryConfig[] = [
   { id: "groceries", label: "Groceries", icon: "ShoppingCart", color: "#2D9E8F", bgColor: "#E0F5F1" },
@@ -16,6 +16,26 @@ export const CATEGORY_MAP = Object.fromEntries(
 ) as Record<CategoryId, CategoryConfig>;
 
 export const DEFAULT_BUDGET = 500;
+
+export interface OneOffCategoryConfig {
+  id: OneOffCategoryId;
+  label: string;
+  icon: string;
+  color: string;
+  bgColor: string;
+}
+
+export const ONEOFF_CATEGORIES: OneOffCategoryConfig[] = [
+  { id: "gifts", label: "Gifts", icon: "Gift", color: "#E91E8C", bgColor: "#FFE0F0" },
+  { id: "shopping", label: "Shopping", icon: "ShoppingBag", color: "#F4D35E", bgColor: "#FFF8E0" },
+  { id: "entertainment", label: "Entertainment", icon: "Gamepad2", color: "#9B59B6", bgColor: "#F0E4F7" },
+  { id: "travel", label: "Travel", icon: "Plane", color: "#5B8DEF", bgColor: "#E0EAFF" },
+  { id: "other", label: "Other", icon: "MoreHorizontal", color: "#6B6B80", bgColor: "#F0F0F4" },
+];
+
+export const ONEOFF_CATEGORY_MAP = Object.fromEntries(
+  ONEOFF_CATEGORIES.map((c) => [c.id, c])
+) as Record<OneOffCategoryId, OneOffCategoryConfig>;
 
 export const CHART_COLORS = [
   "#2D9E8F",

@@ -9,17 +9,27 @@ export function BudgetCard() {
 
   return (
     <div className="retro-card-teal p-5">
-      <p className="text-sm font-medium text-white/80 mb-1">Weekly Budget</p>
+      <p className="text-sm font-medium text-white/80 mb-1">Remaining</p>
 
-      <button
-        onClick={() => toggleEditBudgetModal(true)}
-        className="block w-full text-left group"
-        aria-label="Edit budget"
+      <p
+        className={`font-mono-nums text-4xl font-bold ${
+          isOverBudget ? "text-pink-200" : "text-white"
+        }`}
       >
-        <p className="font-mono-nums text-4xl font-bold text-white group-hover:text-white/90 transition-colors">
-          {formatCurrency(budget)}
-        </p>
-      </button>
+        {formatCurrency(remaining)}
+      </p>
+
+      <div className="flex items-center gap-2 mt-1">
+        <span className="text-sm text-white/80">
+          Weekly Budget: {formatCurrency(budget)}
+        </span>
+        <button
+          onClick={() => toggleEditBudgetModal(true)}
+          className="retro-btn text-xs px-2 py-0.5"
+        >
+          Adjust
+        </button>
+      </div>
 
       {/* Progress bar */}
       <div className="mt-4 mb-3">
@@ -34,25 +44,10 @@ export function BudgetCard() {
         </div>
       </div>
 
-      {/* Spent / Remaining */}
-      <div className="flex justify-between items-center text-sm">
-        <span className="font-medium text-white/90">
-          Spent{" "}
-          <span className="font-mono-nums font-bold text-white">
-            {formatCurrency(spent)}
-          </span>
-        </span>
-        <span className="font-medium text-white/90">
-          Remaining{" "}
-          <span
-            className={`font-mono-nums font-bold ${
-              isOverBudget ? "text-pink-200" : "text-white"
-            }`}
-          >
-            {formatCurrency(remaining)}
-          </span>
-        </span>
-      </div>
+      {/* Spent */}
+      <p className="text-sm text-white/90">
+        Spent {formatCurrency(spent)}
+      </p>
     </div>
   );
 }

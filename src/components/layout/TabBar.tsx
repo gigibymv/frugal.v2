@@ -1,4 +1,4 @@
-import { LayoutDashboard, Receipt, BarChart3, Plus } from "lucide-react";
+import { LayoutDashboard, Receipt, BarChart3 } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
 import type { TabId } from "@/types";
 
@@ -11,43 +11,18 @@ const tabs: { id: TabId; label: string; icon: typeof LayoutDashboard }[] = [
 export function TabBar() {
   const activeTab = useUIStore((s) => s.activeTab);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
-  const toggleAddExpenseModal = useUIStore((s) => s.toggleAddExpenseModal);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 bg-card border-t-2 border-border">
-      <div className="mx-auto max-w-md flex items-center justify-around px-2 py-2">
-        {/* First tab */}
-        <TabButton
-          tab={tabs[0]}
-          isActive={activeTab === tabs[0].id}
-          onClick={() => setActiveTab(tabs[0].id)}
-        />
-
-        {/* Second tab */}
-        <TabButton
-          tab={tabs[1]}
-          isActive={activeTab === tabs[1].id}
-          onClick={() => setActiveTab(tabs[1].id)}
-        />
-
-        {/* Center plus button */}
-        <button
-          onClick={() => toggleAddExpenseModal(true)}
-          className="retro-btn flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground -mt-5"
-          aria-label="Add expense"
-        >
-          <Plus className="w-6 h-6" />
-        </button>
-
-        {/* Third tab */}
-        <TabButton
-          tab={tabs[2]}
-          isActive={activeTab === tabs[2].id}
-          onClick={() => setActiveTab(tabs[2].id)}
-        />
-
-        {/* Spacer to balance the layout — hidden placeholder */}
-        <div className="w-12" />
+    <nav className="fixed bottom-0 left-0 right-0 z-30 bg-card border-t-2 border-border" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <div className="mx-auto max-w-md flex items-center justify-around px-2 pt-2 pb-1">
+        {tabs.map((tab) => (
+          <TabButton
+            key={tab.id}
+            tab={tab}
+            isActive={activeTab === tab.id}
+            onClick={() => setActiveTab(tab.id)}
+          />
+        ))}
       </div>
     </nav>
   );
