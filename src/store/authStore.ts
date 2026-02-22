@@ -25,17 +25,15 @@ export const useAuthStore = create<AuthState>()((set) => ({
       return;
     }
 
-    // Register listener FIRST to catch all auth events including PKCE code exchange.
-    // The INITIAL_SESSION event fires after the internal _initialize() completes,
-    // which handles the PKCE code-for-session exchange automatically.
+    // Register auth state listener
     supabase.auth.onAuthStateChange((event, session) => {
       set({ user: session?.user ?? null });
 
-      if (event === "INITIAL_SESSION") {
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "INITIAL_SESSION") {
         set({ loading: false });
       }
 
-      // Clean up OAuth query params (?code=) and hash fragments (#access_token=)
+      // Clean up OAuth query params after sign-in
       if (event === "SIGNED_IN") {
         const url = new URL(window.location.href);
         if (url.searchParams.has("code") || window.location.hash) {
@@ -44,6 +42,22 @@ export const useAuthStore = create<AuthState>()((set) => ({
         }
       }
     });
+
+    // Explicitly handle PKCE code exchange if ?code= is in the URL
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (code) {
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (error) {
+        console.error("PKCE code exchange failed:", error.message);
+        set({ error: error.message, loading: false });
+      }
+      return;
+    }
+
+    // No code in URL — check for existing session
+    const { data: { session } } = await supabase.auth.getSession();
+    set({ user: session?.user ?? null, loading: false });
   },
 
   signUp: async (email, password) => {
