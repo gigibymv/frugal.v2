@@ -32,9 +32,13 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
     supabase.auth.onAuthStateChange((event, session) => {
       set({ user: session?.user ?? null });
-      // Clean up OAuth URL fragments after sign in
-      if (event === "SIGNED_IN" && window.location.hash) {
-        window.history.replaceState(null, "", window.location.pathname);
+      // Clean up OAuth query params (?code=) and hash fragments (#access_token=)
+      if (event === "SIGNED_IN") {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has("code") || window.location.hash) {
+          url.searchParams.delete("code");
+          window.history.replaceState(null, "", url.pathname);
+        }
       }
     });
   },
