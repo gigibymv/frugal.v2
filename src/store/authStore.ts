@@ -25,13 +25,16 @@ export const useAuthStore = create<AuthState>()((set) => ({
       return;
     }
 
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    set({ user: session?.user ?? null, loading: false });
-
+    // Register listener FIRST to catch all auth events including PKCE code exchange.
+    // The INITIAL_SESSION event fires after the internal _initialize() completes,
+    // which handles the PKCE code-for-session exchange automatically.
     supabase.auth.onAuthStateChange((event, session) => {
       set({ user: session?.user ?? null });
+
+      if (event === "INITIAL_SESSION") {
+        set({ loading: false });
+      }
+
       // Clean up OAuth query params (?code=) and hash fragments (#access_token=)
       if (event === "SIGNED_IN") {
         const url = new URL(window.location.href);
