@@ -6,7 +6,7 @@ import { useOneOffExpenseStore } from "@/store/oneOffExpenseStore";
 import { useUIStore } from "@/store/uiStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { exportToCSV } from "@/lib/export";
-import { formatCurrency, getWeekRange } from "@/lib/date-utils";
+import { formatCurrency, getWeekRange, isDateInRange } from "@/lib/date-utils";
 import { SpendingSummary } from "./SpendingSummary";
 import { CategoryBreakdown } from "./CategoryBreakdown";
 import { WeekOverWeekChart } from "./WeekOverWeekChart";
@@ -20,10 +20,7 @@ export function AnalyticsView() {
   const oneOffTotal = useMemo(() => {
     const { start, end } = getWeekRange(selectedWeekOffset, weekStartDay as 0|1|2|3|4|5|6);
     return allOneOff
-      .filter((e) => {
-        const d = new Date(e.date);
-        return d >= start && d <= end;
-      })
+      .filter((e) => isDateInRange(e.date, start, end))
       .reduce((sum, e) => sum + e.amount, 0);
   }, [allOneOff, selectedWeekOffset, weekStartDay]);
 

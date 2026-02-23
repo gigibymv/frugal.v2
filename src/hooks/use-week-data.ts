@@ -3,7 +3,7 @@ import { useBudgetStore } from "@/store/budgetStore";
 import { useExpenseStore } from "@/store/expenseStore";
 import { useUIStore } from "@/store/uiStore";
 import { useSettingsStore } from "@/store/settingsStore";
-import { getWeekRange } from "@/lib/date-utils";
+import { getWeekRange, isDateInRange } from "@/lib/date-utils";
 
 export function useWeekData() {
   const selectedWeekOffset = useUIStore((s) => s.selectedWeekOffset);
@@ -26,10 +26,7 @@ export function useWeekData() {
 
     // Filter expenses for this week
     const weekExpenses = expenses
-      .filter((e) => {
-        const d = new Date(e.date);
-        return d >= start && d <= end;
-      })
+      .filter((e) => isDateInRange(e.date, start, end))
       .sort((a, b) => b.date.localeCompare(a.date));
 
     const spent = weekExpenses.reduce((sum, e) => sum + e.amount, 0);

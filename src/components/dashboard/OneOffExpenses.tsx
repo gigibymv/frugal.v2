@@ -5,7 +5,7 @@ import { useUIStore } from "@/store/uiStore";
 import { useOneOffExpenseStore } from "@/store/oneOffExpenseStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { ONEOFF_CATEGORY_MAP } from "@/lib/constants";
-import { formatCurrency, getWeekRange } from "@/lib/date-utils";
+import { formatCurrency, getWeekRange, isDateInRange } from "@/lib/date-utils";
 import { useMemo } from "react";
 
 export function OneOffExpenses() {
@@ -22,10 +22,9 @@ export function OneOffExpenses() {
   );
 
   const weekOneOff = useMemo(
-    () => allOneOff.filter((e) => {
-      const d = new Date(e.date);
-      return d >= start && d <= end;
-    }).sort((a, b) => b.date.localeCompare(a.date)),
+    () => allOneOff
+      .filter((e) => isDateInRange(e.date, start, end))
+      .sort((a, b) => b.date.localeCompare(a.date)),
     [allOneOff, start, end]
   );
 
