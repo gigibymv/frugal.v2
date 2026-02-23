@@ -50,7 +50,11 @@ export const useAuthStore = create<AuthState>()((set) => ({
       const { error } = await supabase.auth.exchangeCodeForSession(code);
       if (error) {
         console.error("PKCE code exchange failed:", error.message);
-        set({ error: error.message, loading: false });
+        // Clean up stale OAuth params so the error doesn't persist on refresh
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete("code");
+        window.history.replaceState(null, "", cleanUrl.pathname);
+        set({ loading: false });
       }
       return;
     }
@@ -104,6 +108,13 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
   signOut: async () => {
     if (!supabase) return;
+    // Clean OAuth params from URL before signing out to prevent
+    // stale PKCE verifier errors on next page load
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("code") || window.location.hash) {
+      url.searchParams.delete("code");
+      window.history.replaceState(null, "", url.pathname);
+    }
     await supabase.auth.signOut();
     // Clear local storage for user-specific stores (keep frugal-dark-mode as UI preference)
     localStorage.removeItem("weekly-budget-budget");
