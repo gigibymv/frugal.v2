@@ -61,10 +61,9 @@ export function QuickAddExpense() {
         {/* Inputs row */}
         <div className="flex gap-2">
           <input
-            type="number"
+            type="text"
             inputMode="decimal"
-            step="0.01"
-            min="0"
+            pattern="[0-9]*\.?[0-9]*"
             placeholder="$0.00"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}

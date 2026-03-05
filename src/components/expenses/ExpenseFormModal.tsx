@@ -112,10 +112,9 @@ export function ExpenseFormModal() {
               </span>
               <Input
                 id="amount"
-                type="number"
-                step="0.01"
+                type="text"
                 inputMode="decimal"
-                min="0.01"
+                pattern="[0-9]*\.?[0-9]*"
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}

@@ -96,10 +96,9 @@ export function OneOffExpenseFormModal() {
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-mono-nums text-muted-foreground">$</span>
               <Input
                 id="oneoff-amount"
-                type="number"
-                step="0.01"
+                type="text"
                 inputMode="decimal"
-                min="0.01"
+                pattern="[0-9]*\.?[0-9]*"
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
