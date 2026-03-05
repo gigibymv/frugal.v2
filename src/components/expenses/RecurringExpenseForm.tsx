@@ -62,7 +62,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const parsedAmount = parseFloat(amount);
+    const parsedAmount = parseFloat(amount.replace(',', '.'));
     if (!parsedAmount || isNaN(parsedAmount) || parsedAmount <= 0) {
       setError("Amount must be greater than $0");
       return;
@@ -125,7 +125,7 @@ export function RecurringExpenseForm({ open, onClose, editing }: RecurringExpens
                 id="rec-amount"
                 type="text"
                 inputMode="decimal"
-                pattern="[0-9]*\.?[0-9]*"
+                pattern="[0-9]*[.,]?[0-9]*"
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}

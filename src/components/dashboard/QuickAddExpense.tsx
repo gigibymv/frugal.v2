@@ -13,7 +13,7 @@ export function QuickAddExpense() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const parsed = parseFloat(amount);
+    const parsed = parseFloat(amount.replace(',', '.'));
     if (!parsed || parsed <= 0) return;
 
     addExpense({
@@ -63,7 +63,7 @@ export function QuickAddExpense() {
           <input
             type="text"
             inputMode="decimal"
-            pattern="[0-9]*\.?[0-9]*"
+            pattern="[0-9]*[.,]?[0-9]*"
             placeholder="$0.00"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
