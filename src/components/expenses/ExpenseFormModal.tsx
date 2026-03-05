@@ -114,6 +114,7 @@ export function ExpenseFormModal() {
                 id="amount"
                 type="number"
                 step="0.01"
+                inputMode="decimal"
                 min="0.01"
                 placeholder="0.00"
                 value={amount}

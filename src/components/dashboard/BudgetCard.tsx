@@ -42,6 +42,11 @@ export function BudgetCard() {
             }}
           />
         </div>
+        {percentUsed > 100 && (
+          <p className="text-xs text-pink-200/90 mt-1.5 font-medium tabular-nums">
+            {(percentUsed - 100).toFixed(0)}% over budget
+          </p>
+        )}
       </div>
 
       {/* Spent */}

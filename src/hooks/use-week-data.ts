@@ -31,7 +31,7 @@ export function useWeekData() {
 
     const spent = weekExpenses.reduce((sum, e) => sum + e.amount, 0);
     const remaining = budget - spent;
-    const percentUsed = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
+    const percentUsed = budget > 0 ? (spent / budget) * 100 : 0;
 
     const spentByCategory: Record<string, number> = {};
     for (const e of weekExpenses) {
