@@ -56,6 +56,28 @@ uploaded to a new account, because they have no verified owner. When present,
 the sign-in page offers an explicit download of those previous browser records.
 The `supabase/` directory retains historical schema files only.
 
+## Offline recovery from the former database
+
+A one-time private export can be converted without reconnecting the application
+to Supabase:
+
+```sh
+node scripts/convert-supabase-export.mjs --input /private/path/export.json --output-dir /private/path/new-backups --expected-project-ref zoeirjelygmmastmgfui
+node scripts/check-supabase-export.mjs
+```
+
+The input is an explicit, sanitized JSON export of source user UUIDs and the old
+budget/expense tables. Never include authentication hashes or tokens. The
+converter validates all rows against the current snapshot schema, preserves
+source budget history, reports duplicate content, and creates private files in
+a new directory. It does not assign accounts, upload data or merge current
+snapshots. Keep exports and login details outside this repository.
+
+Recovery into a live account requires an explicit source-to-destination ownership
+mapping, a destination backup, revision protection, and readback verification.
+An equal unverified email is insufficient proof of ownership. Never replace an
+existing account snapshot blindly or restore another user's records into it.
+
 ## Verification
 
 ```sh
