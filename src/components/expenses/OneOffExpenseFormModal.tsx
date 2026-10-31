@@ -1,3 +1,4 @@
+import { MAX_AMOUNT } from "../../../shared/snapshot";
 import { useEffect, useState } from "react";
 import type { OneOffCategoryId } from "@/types";
 import { todayISO } from "@/lib/date-utils";
@@ -61,8 +62,8 @@ export function OneOffExpenseFormModal() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const parsedAmount = parseFloat(amount.replace(',', '.'));
-    if (!parsedAmount || isNaN(parsedAmount) || parsedAmount <= 0) {
-      setError("Amount must be greater than $0");
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0 || parsedAmount > MAX_AMOUNT) {
+      setError("Amount must be between $0.01 and $1,000,000,000");
       return;
     }
     if (!category) {

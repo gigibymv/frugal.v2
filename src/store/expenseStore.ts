@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { CategoryId, Expense } from "@/types";
 import { isDateInRange } from "@/lib/date-utils";
 
@@ -19,7 +18,6 @@ interface ExpenseState {
 }
 
 export const useExpenseStore = create<ExpenseState>()(
-  persist(
     (set, get) => ({
       expenses: [],
 
@@ -95,7 +93,5 @@ export const useExpenseStore = create<ExpenseState>()(
         }
         return data;
       },
-    }),
-    { name: "weekly-budget-expenses" }
-  )
+    })
 );

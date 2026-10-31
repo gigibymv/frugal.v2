@@ -1,3 +1,4 @@
+import { MAX_AMOUNT } from "../../../shared/snapshot";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { useExpenseStore } from "@/store/expenseStore";
@@ -14,7 +15,7 @@ export function QuickAddExpense() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = parseFloat(amount.replace(',', '.'));
-    if (!parsed || parsed <= 0) return;
+    if (!Number.isFinite(parsed) || parsed <= 0 || parsed > MAX_AMOUNT) return;
 
     addExpense({
       amount: parsed,
@@ -72,6 +73,7 @@ export function QuickAddExpense() {
           <input
             type="text"
             placeholder="Description"
+            maxLength={100}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="flex-1 min-w-0 px-3 py-2 rounded-lg border-2 border-foreground bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary"

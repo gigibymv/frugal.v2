@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 interface SettingsState {
   displayName: string;
@@ -9,13 +8,10 @@ interface SettingsState {
 }
 
 export const useSettingsStore = create<SettingsState>()(
-  persist(
     (set) => ({
       displayName: "",
       weekStartDay: 1, // Monday default
       setDisplayName: (name) => set({ displayName: name }),
       setWeekStartDay: (day) => set({ weekStartDay: day }),
-    }),
-    { name: "frugal-settings" }
-  )
+    })
 );

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { WeeklyBudget } from "@/types";
 import { DEFAULT_BUDGET } from "@/lib/constants";
 
@@ -10,7 +9,6 @@ interface BudgetState {
 }
 
 export const useBudgetStore = create<BudgetState>()(
-  persist(
     (set, get) => ({
       budgetHistory: [
         {
@@ -41,7 +39,5 @@ export const useBudgetStore = create<BudgetState>()(
           .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
         return active[0]?.amount ?? DEFAULT_BUDGET;
       },
-    }),
-    { name: "weekly-budget-budget" }
-  )
+    })
 );

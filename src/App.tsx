@@ -1,7 +1,10 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
-import { useRecurringExpenseStore } from "@/store/recurringExpenseStore";
+import { useAuthStore } from "@/store/authStore";
+import { useSyncStore, startBudgetSync, stopBudgetSync, refreshBudgetSync } from "@/lib/account-sync";
+import { AuthPage } from "@/components/auth/AuthPage";
+import { SyncNotice } from "@/components/auth/SyncNotice";
 import { AppShell } from "@/components/layout/AppShell";
 import { Header } from "@/components/layout/Header";
 import { TabBar } from "@/components/layout/TabBar";
@@ -38,6 +41,36 @@ function ActiveView() {
 }
 
 export default function App() {
+  const user = useAuthStore(s => s.user);
+  const userId = user?.id;
+  const authLoading = useAuthStore(s => s.loading);
+  const ready = useSyncStore(s => s.ready);
+  const syncStatus = useSyncStore(s => s.status);
+
+  useEffect(() => {
+    void useAuthStore.getState().initialize();
+    const refresh = () => {
+      if (document.visibilityState !== "visible" || useAuthStore.getState().busy) return;
+      void useAuthStore.getState().refresh().then(verified => { if (verified) void refreshBudgetSync(); });
+    };
+    const accountChanged = (event: StorageEvent) => {
+      if (event.key !== "frugal:auth-event") return;
+      void useAuthStore.getState().refresh().then(verified => { if (verified) void refreshBudgetSync(); });
+    };
+    document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("online", refresh);
+    window.addEventListener("storage", accountChanged);
+    return () => {
+      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("online", refresh);
+      window.removeEventListener("storage", accountChanged);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (userId && !authLoading) void startBudgetSync(userId);
+    return stopBudgetSync;
+  }, [userId, authLoading]);
   // Apply dark mode class to document
   useEffect(() => {
     const applyDark = (dark: boolean) => {
@@ -51,21 +84,16 @@ export default function App() {
     return unsub;
   }, []);
 
-  // Local stores hydrate synchronously before effects run.
-  useEffect(() => {
-    const generateDueExpenses = () => {
-      if (document.visibilityState === "visible") {
-        useRecurringExpenseStore.getState().generateDueExpenses();
-      }
-    };
-    generateDueExpenses();
-    document.addEventListener("visibilitychange", generateDueExpenses);
-    return () => document.removeEventListener("visibilitychange", generateDueExpenses);
-  }, []);
+  if (authLoading) return <div className="min-h-dvh bg-background flex items-center justify-center"><ViewSpinner /></div>;
+  if (!user) return <AuthPage />;
+  if (!ready || syncStatus === "session-changed") {
+    return <><Header /><SyncNotice />{syncStatus === "loading" && <ViewSpinner />}</>;
+  }
 
   return (
     <>
       <Header />
+      <SyncNotice />
       <AppShell>
         <WeekNavigator />
         <ActiveView />

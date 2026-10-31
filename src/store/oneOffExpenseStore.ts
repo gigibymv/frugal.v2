@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { OneOffExpense } from "@/types";
 
 interface OneOffExpenseState {
@@ -10,7 +9,6 @@ interface OneOffExpenseState {
 }
 
 export const useOneOffExpenseStore = create<OneOffExpenseState>()(
-  persist(
     (set) => ({
       oneOffExpenses: [],
 
@@ -41,7 +39,5 @@ export const useOneOffExpenseStore = create<OneOffExpenseState>()(
           return { oneOffExpenses: newExpenses };
         });
       },
-    }),
-    { name: "frugal-oneoff-expenses" }
-  )
+    })
 );

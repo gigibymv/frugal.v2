@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { RecurringExpense } from "@/types";
 import { useExpenseStore } from "@/store/expenseStore";
 import { addDays, addMonths, parseISO, isBefore, startOfDay, format } from "date-fns";
@@ -26,7 +25,6 @@ function getNextDueDate(reference: string, frequency: RecurringExpense["frequenc
 }
 
 export const useRecurringExpenseStore = create<RecurringExpenseState>()(
-  persist(
     (set) => ({
       recurringExpenses: [],
 
@@ -98,10 +96,11 @@ export const useRecurringExpenseStore = create<RecurringExpenseState>()(
             return r;
           });
 
-          return { recurringExpenses: newList };
+          // Reopening a tab with nothing due must not create a cloud write.
+          return newList.some((item, index) => item !== state.recurringExpenses[index])
+            ? { recurringExpenses: newList }
+            : state;
         });
       },
-    }),
-    { name: "weekly-budget-recurring" }
-  )
+    })
 );
