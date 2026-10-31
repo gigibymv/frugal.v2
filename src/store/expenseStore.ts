@@ -1,9 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { CategoryId, Expense } from "@/types";
 import { isDateInRange } from "@/lib/date-utils";
-import { syncExpensesToSupabase } from "@/lib/sync";
-import { useAuthStore } from "@/store/authStore";
 
 interface ExpenseState {
   expenses: Expense[];
@@ -21,7 +18,6 @@ interface ExpenseState {
 }
 
 export const useExpenseStore = create<ExpenseState>()(
-  persist(
     (set, get) => ({
       expenses: [],
 
@@ -33,10 +29,6 @@ export const useExpenseStore = create<ExpenseState>()(
         };
         set((state) => {
           const newExpenses = [expense, ...state.expenses];
-          const user = useAuthStore.getState().user;
-          if (user) {
-            syncExpensesToSupabase(user.id, newExpenses);
-          }
           return { expenses: newExpenses };
         });
       },
@@ -46,10 +38,6 @@ export const useExpenseStore = create<ExpenseState>()(
           const newExpenses = state.expenses.map((e) =>
             e.id === id ? { ...e, ...data } : e
           );
-          const user = useAuthStore.getState().user;
-          if (user) {
-            syncExpensesToSupabase(user.id, newExpenses);
-          }
           return { expenses: newExpenses };
         });
       },
@@ -57,10 +45,6 @@ export const useExpenseStore = create<ExpenseState>()(
       deleteExpense: (id) => {
         set((state) => {
           const newExpenses = state.expenses.filter((e) => e.id !== id);
-          const user = useAuthStore.getState().user;
-          if (user) {
-            syncExpensesToSupabase(user.id, newExpenses);
-          }
           return { expenses: newExpenses };
         });
       },
@@ -109,7 +93,5 @@ export const useExpenseStore = create<ExpenseState>()(
         }
         return data;
       },
-    }),
-    { name: "weekly-budget-expenses" }
-  )
+    })
 );

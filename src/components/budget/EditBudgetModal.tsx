@@ -1,3 +1,4 @@
+import { MAX_AMOUNT } from "../../../shared/snapshot";
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -53,8 +54,8 @@ export function EditBudgetModal() {
 
   function handleSave() {
     const parsed = parseFloat(amount);
-    if (isNaN(parsed) || parsed <= 0) {
-      setError("Budget must be greater than $0");
+    if (!Number.isFinite(parsed) || parsed <= 0 || parsed > MAX_AMOUNT) {
+      setError("Budget must be between $0.01 and $1,000,000,000");
       return;
     }
     setBudget(parsed);

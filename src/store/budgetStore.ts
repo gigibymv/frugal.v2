@@ -1,9 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { WeeklyBudget } from "@/types";
 import { DEFAULT_BUDGET } from "@/lib/constants";
-import { syncBudgetsToSupabase } from "@/lib/sync";
-import { useAuthStore } from "@/store/authStore";
 
 interface BudgetState {
   budgetHistory: WeeklyBudget[];
@@ -12,7 +9,6 @@ interface BudgetState {
 }
 
 export const useBudgetStore = create<BudgetState>()(
-  persist(
     (set, get) => ({
       budgetHistory: [
         {
@@ -30,11 +26,6 @@ export const useBudgetStore = create<BudgetState>()(
         };
         set((state) => {
           const newHistory = [...state.budgetHistory, entry];
-          // Sync to Supabase if authenticated
-          const user = useAuthStore.getState().user;
-          if (user) {
-            syncBudgetsToSupabase(user.id, newHistory);
-          }
           return { budgetHistory: newHistory };
         });
       },
@@ -48,7 +39,5 @@ export const useBudgetStore = create<BudgetState>()(
           .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
         return active[0]?.amount ?? DEFAULT_BUDGET;
       },
-    }),
-    { name: "weekly-budget-budget" }
-  )
+    })
 );

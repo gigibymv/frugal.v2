@@ -1,1 +1,21 @@
-{ "name": "frugal-v2", "pages_build_output_dir": "./dist" }
+{
+  "name": "frugal-v2",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-10-30",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "frugal-accounts",
+      "database_id": "7cb4960a-5417-443a-8a61-6110c8e93a82",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "env": {
+    "preview": {
+      "d1_databases": []
+    }
+  }
+}

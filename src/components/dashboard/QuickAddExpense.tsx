@@ -1,3 +1,4 @@
+import { MAX_AMOUNT } from "../../../shared/snapshot";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { useExpenseStore } from "@/store/expenseStore";
@@ -11,10 +12,13 @@ export function QuickAddExpense() {
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>("dining");
 
+  const parsedAmount = parseFloat(amount.replace(',', '.'));
+  const validAmount = Number.isFinite(parsedAmount) && parsedAmount > 0 && parsedAmount <= MAX_AMOUNT;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = parseFloat(amount.replace(',', '.'));
-    if (!parsed || parsed <= 0) return;
+    if (!Number.isFinite(parsed) || parsed <= 0 || parsed > MAX_AMOUNT) return;
 
     addExpense({
       amount: parsed,
@@ -72,13 +76,14 @@ export function QuickAddExpense() {
           <input
             type="text"
             placeholder="Description"
+            maxLength={100}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="flex-1 min-w-0 px-3 py-2 rounded-lg border-2 border-foreground bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <button
             type="submit"
-            disabled={!amount || parseFloat(amount) <= 0}
+            disabled={!validAmount}
             className="retro-btn px-4 py-2 bg-primary text-primary-foreground text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
           >
             <Plus className="w-4 h-4" />

@@ -1,12 +1,17 @@
 import { LogOut, User } from "lucide-react";
-import { useUIStore } from "@/store/uiStore";
 import { useAuthStore } from "@/store/authStore";
+import { useSyncStore, archivedBrowserDrafts } from "@/lib/account-sync";
+import { useUIStore } from "@/store/uiStore";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export function Header() {
+  const user = useAuthStore(s => s.user);
+  const signOut = useAuthStore(s => s.signOut);
+  const busy = useAuthStore(s => s.busy);
+  const error = useAuthStore(s => s.error);
+  const archived = user ? archivedBrowserDrafts(user.id) : [];
+  const status = useSyncStore(s => s.status);
   const toggleSettingsModal = useUIStore((s) => s.toggleSettingsModal);
-  const user = useAuthStore((s) => s.user);
-  const signOut = useAuthStore((s) => s.signOut);
   const displayName = useSettingsStore((s) => s.displayName);
 
   return (
@@ -23,18 +28,17 @@ export function Header() {
           >
             <User className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs font-medium text-primary max-w-[100px] truncate">
-              {displayName || user?.email?.split("@")[0]}
+              {displayName || user?.name || "Settings"}
             </span>
           </button>
-          <button
-            onClick={signOut}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
-            aria-label="Sign out"
-          >
+          <button onClick={() => { void signOut(); }} disabled={busy} className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50" aria-label="Sign out">
             <LogOut className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
       </div>
+      {archived.length > 0 && <button className="block mx-auto max-w-md px-4 pb-2 text-xs text-primary underline" onClick={() => toggleSettingsModal(true)}>Review {archived.length} other browser draft{archived.length === 1 ? "" : "s"}</button>}
+      {error && <p role="alert" className="mx-auto max-w-md px-4 pb-2 text-sm text-destructive">{error}</p>}
+      {(status === "saving" || status === "ready" || status === "pending") && <p className="mx-auto max-w-md px-4 pb-2 text-xs text-muted-foreground" role="status">{status === "ready" ? "Saved to your account" : "Saving…"}</p>}
     </header>
   );
 }
