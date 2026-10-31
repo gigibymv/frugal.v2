@@ -82,6 +82,10 @@ migration; future schema changes need a new additive migration.
 ## Production setup
 
 Keep the existing `frugal-v2` project and https://frugal-v2.pages.dev/ origin.
+Its verified owning account is `17ced8b33ac43682371a9755c8c38887`, as recorded
+by the successful Cloudflare Pages check for production commit `aa37ab3`.
+The deployment guard requires this exact account; an authenticated session for
+another account cannot deploy this project.
 The checked-in D1 ID is deliberately a local-only placeholder. `npm run deploy`
 fails closed until `account_id` and a real D1 `database_id` are configured.
 
