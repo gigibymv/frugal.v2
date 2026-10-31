@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { OneOffExpense } from "@/types";
+import { syncOneOffExpensesToSupabase } from "@/lib/sync";
+import { useAuthStore } from "@/store/authStore";
 
 interface OneOffExpenseState {
   oneOffExpenses: OneOffExpense[];
@@ -22,6 +24,10 @@ export const useOneOffExpenseStore = create<OneOffExpenseState>()(
         };
         set((state) => {
           const newExpenses = [expense, ...state.oneOffExpenses];
+          const user = useAuthStore.getState().user;
+          if (user) {
+            syncOneOffExpensesToSupabase(user.id, newExpenses);
+          }
           return { oneOffExpenses: newExpenses };
         });
       },
@@ -31,6 +37,10 @@ export const useOneOffExpenseStore = create<OneOffExpenseState>()(
           const newExpenses = state.oneOffExpenses.map((e) =>
             e.id === id ? { ...e, ...data } : e
           );
+          const user = useAuthStore.getState().user;
+          if (user) {
+            syncOneOffExpensesToSupabase(user.id, newExpenses);
+          }
           return { oneOffExpenses: newExpenses };
         });
       },
@@ -38,6 +48,10 @@ export const useOneOffExpenseStore = create<OneOffExpenseState>()(
       deleteOneOffExpense: (id) => {
         set((state) => {
           const newExpenses = state.oneOffExpenses.filter((e) => e.id !== id);
+          const user = useAuthStore.getState().user;
+          if (user) {
+            syncOneOffExpensesToSupabase(user.id, newExpenses);
+          }
           return { oneOffExpenses: newExpenses };
         });
       },
