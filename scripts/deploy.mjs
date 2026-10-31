@@ -7,5 +7,10 @@ if (config.name !== 'frugal-v2' || (process.env.CLOUDFLARE_ACCOUNT_ID && process
     !/^[a-f0-9-]{36}$/.test(databaseId ?? '') || /^0{8}-0{4}-0{4}-0{4}-0{12}$/.test(databaseId)) {
   throw new Error('Use the verified frugal-v2 account and real D1 binding before production deployment. A local placeholder cannot be deployed.');
 }
-const result = spawnSync(process.execPath, ['node_modules/wrangler/bin/wrangler.js', 'pages', 'deploy', 'dist', '--project-name', 'frugal-v2', '--branch', 'main'], { stdio: 'inherit', env: { ...process.env, CLOUDFLARE_ACCOUNT_ID: ownerAccountId } });
+if (process.argv.includes('--help')) {
+  console.log('Deploy Frugal to its verified Cloudflare account. Uses the frugal Wrangler profile unless an API credential is supplied.');
+  process.exit(0);
+}
+const profileArgs = process.env.CLOUDFLARE_API_TOKEN || process.env.CLOUDFLARE_API_KEY ? [] : ['--profile', 'frugal'];
+const result = spawnSync(process.execPath, ['node_modules/wrangler/bin/wrangler.js', ...profileArgs, 'pages', 'deploy', 'dist', '--project-name', 'frugal-v2', '--branch', 'main'], { stdio: 'inherit', env: { ...process.env, CLOUDFLARE_ACCOUNT_ID: ownerAccountId } });
 process.exit(result.status ?? 1);

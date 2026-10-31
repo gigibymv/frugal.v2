@@ -83,11 +83,12 @@ migration; future schema changes need a new additive migration.
 
 Keep the existing `frugal-v2` project and https://frugal-v2.pages.dev/ origin.
 Its verified owning account is `17ced8b33ac43682371a9755c8c38887`, as recorded
-by the successful Cloudflare Pages check for production commit `aa37ab3`.
+by the successful Cloudflare Pages production deployment.
 The deployment guard requires this exact account; an authenticated session for
 another account cannot deploy this project.
 The production D1 binding is configured in `wrangler.json`. The deployment
-script pins the verified owning account through `CLOUDFLARE_ACCOUNT_ID`; Pages
+script uses the separate Wrangler profile `frugal` (or an explicitly supplied API
+credential) and pins the verified owning account through `CLOUDFLARE_ACCOUNT_ID`; Pages
 configuration does not accept an `account_id` field. Preview deployments have
 no production D1 binding. The deployment guard rejects local placeholder IDs.
 
@@ -107,5 +108,11 @@ Before first deployment:
    native password hashing CPU limits at the live destination before declaring
    delivery complete. Local workerd results do not prove production quotas.
 
-Do not share the production DB/secret with previews. Production account access,
-real D1 binding and live delivery remain unverified until the above steps finish.
+Do not share the production DB/secret with previews.
+
+Production was deployed and verified on 2026-10-31. Live checks passed for
+signup, secure sessions, login/logout, save/reload, two-account isolation,
+origin enforcement, stale-write rejection and exact retry replay. The browser
+confirmed that data saved through another client loaded into the account.
+The dedicated D1 migrations are applied; legacy Supabase environment variables
+have been removed from production and previews. Node 24 is configured for both.
