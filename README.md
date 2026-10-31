@@ -86,16 +86,18 @@ Its verified owning account is `17ced8b33ac43682371a9755c8c38887`, as recorded
 by the successful Cloudflare Pages check for production commit `aa37ab3`.
 The deployment guard requires this exact account; an authenticated session for
 another account cannot deploy this project.
-The checked-in D1 ID is deliberately a local-only placeholder. `npm run deploy`
-fails closed until `account_id` and a real D1 `database_id` are configured.
+The production D1 binding is configured in `wrangler.json`. The deployment
+script pins the verified owning account through `CLOUDFLARE_ACCOUNT_ID`; Pages
+configuration does not accept an `account_id` field. Preview deployments have
+no production D1 binding. The deployment guard rejects local placeholder IDs.
 
 Before first deployment:
 
 1. Verify access to the actual owning Cloudflare account/project. An unrelated
    authenticated Wrangler account is insufficient. Do not create a replacement
    Pages project or change the public URL.
-2. Check the current plan/limits; do not enable spending. Create a dedicated D1
-   database, record its ID and the owning account ID in `wrangler.json`, then
+2. Check the current plan/limits; do not enable spending. Use the dedicated D1
+   database recorded in `wrangler.json`, then
    apply the additive migrations with `wrangler d1 migrations apply DB --remote`.
 3. Set a strong production `AUTH_SECRET` through Pages secrets for `frugal-v2`.
    Omit `AUTH_ORIGIN` to use the fixed production origin. Local secrets are not

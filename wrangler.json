@@ -9,9 +9,13 @@
     {
       "binding": "DB",
       "database_name": "frugal-accounts",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "7cb4960a-5417-443a-8a61-6110c8e93a82",
       "migrations_dir": "migrations"
     }
   ],
-  "account_id": "17ced8b33ac43682371a9755c8c38887"
+  "env": {
+    "preview": {
+      "d1_databases": []
+    }
+  }
 }
