@@ -38,8 +38,8 @@ account APIs; use the full local server to sign up and save data.
   cannot delete another tab's draft; a per-tab pointer permits reload recovery.
   After a tab is closed, other account drafts remain visible through the header
   and Settings, where they can be downloaded and explicitly restored. They are
-  never adopted automatically from a potentially still-open tab. Failed saves and
-  conflicts are visible; a draft is never automatically rebased onto a newer
+  never adopted automatically from a potentially still-open tab. Small pending saves are flushed with keepalive on hide/page exit when possible.
+  Failed saves and conflicts are visible; a draft is never automatically rebased onto a newer
   cloud version. A conflict offers draft download and explicit cloud reload.
 - Download full JSON data from Settings; CSV expenses remain in Analytics.
   Settings can restore the JSON archive after an explicit confirmation naming

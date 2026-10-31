@@ -16,6 +16,7 @@ export function AuthPage() {
           <h1 className="text-4xl font-black tracking-tight text-foreground">Frugal</h1>
           <p className="text-muted-foreground text-sm">{signingUp ? "Create your account" : "Welcome back"}</p>
         </div>
+        <p className="text-center text-xs text-muted-foreground">Previously used Frugal? Create a new account for this version. Previous account data is not imported automatically.</p>
         <div className="retro-card p-6 space-y-5">
           <form onSubmit={e => { e.preventDefault(); void (signingUp ? signUp(email, password) : signIn(email, password)); }} className="space-y-4">
             <div className="space-y-1">

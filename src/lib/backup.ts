@@ -1,9 +1,9 @@
-import { rejectedDraftArchive } from "@/lib/account-sync";
+import { rejectedDraftArchive, currentBudgetRevision, currentBudgetOwner } from "@/lib/account-sync";
 import { snapshotSchema } from "../../shared/snapshot";
 import { emptyBudgetData, readBudgetData } from "@/lib/budget-data";
 
 export function createLocalBackup() {
-  return { format: "frugal-backup", version: 1, exportedAt: new Date().toISOString(), ...readBudgetData() };
+  return { format: "frugal-backup", version: 1, exportedAt: new Date().toISOString(), cloudRevision: currentBudgetRevision(), sourceAccountId: currentBudgetOwner(), ...readBudgetData() };
 }
 
 export function exportLocalBackup() {
@@ -77,7 +77,7 @@ export function exportArchivedDraft(key: string, userId: string) {
   try {
     const draft = JSON.parse(raw);
     const parsed = snapshotSchema.safeParse(draft.data);
-    if (parsed.success) content = JSON.stringify({ format: "frugal-backup", version: 1, ...parsed.data }, null, 2);
+    if (parsed.success) content = JSON.stringify({ format: "frugal-backup", version: 1, cloudRevision: draft.revision, sourceAccountId: userId, ...parsed.data }, null, 2);
   } catch { /* Preserve an invalid raw archive for manual recovery. */ }
   const url = URL.createObjectURL(new Blob([content], { type: "application/json" }));
   const link = document.createElement("a");

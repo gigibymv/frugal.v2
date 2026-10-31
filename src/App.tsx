@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
 import { useAuthStore } from "@/store/authStore";
-import { useSyncStore, startBudgetSync, stopBudgetSync, refreshBudgetSync } from "@/lib/account-sync";
+import { useSyncStore, startBudgetSync, stopBudgetSync, refreshBudgetSync, saveBudgetData } from "@/lib/account-sync";
 import { AuthPage } from "@/components/auth/AuthPage";
 import { SyncNotice } from "@/components/auth/SyncNotice";
 import { AppShell } from "@/components/layout/AppShell";
@@ -50,18 +50,22 @@ export default function App() {
   useEffect(() => {
     void useAuthStore.getState().initialize();
     const refresh = () => {
-      if (document.visibilityState !== "visible" || useAuthStore.getState().busy) return;
+      if (document.visibilityState !== "visible") { void saveBudgetData(true); return; }
+      if (useAuthStore.getState().busy) return;
       void useAuthStore.getState().refresh().then(verified => { if (verified) void refreshBudgetSync(); });
     };
     const accountChanged = (event: StorageEvent) => {
       if (event.key !== "frugal:auth-event") return;
       void useAuthStore.getState().refresh().then(verified => { if (verified) void refreshBudgetSync(); });
     };
+    const saveOnExit = () => { void saveBudgetData(true); };
     document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("pagehide", saveOnExit);
     window.addEventListener("online", refresh);
     window.addEventListener("storage", accountChanged);
     return () => {
       document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("pagehide", saveOnExit);
       window.removeEventListener("online", refresh);
       window.removeEventListener("storage", accountChanged);
     };

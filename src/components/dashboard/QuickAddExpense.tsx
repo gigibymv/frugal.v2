@@ -12,6 +12,9 @@ export function QuickAddExpense() {
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>("dining");
 
+  const parsedAmount = parseFloat(amount.replace(',', '.'));
+  const validAmount = Number.isFinite(parsedAmount) && parsedAmount > 0 && parsedAmount <= MAX_AMOUNT;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = parseFloat(amount.replace(',', '.'));
@@ -80,7 +83,7 @@ export function QuickAddExpense() {
           />
           <button
             type="submit"
-            disabled={!amount || parseFloat(amount) <= 0}
+            disabled={!validAmount}
             className="retro-btn px-4 py-2 bg-primary text-primary-foreground text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
           >
             <Plus className="w-4 h-4" />

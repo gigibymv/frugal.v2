@@ -27,7 +27,7 @@ try {
   dataA.settings.displayName = 'Account A'; dataB.settings.displayName = 'Account B';
   const database = new Map([['A', { revision: 1, data: dataA }], ['B', { revision: 1, data: dataB }]]);
   let activeUser = 'A', holdGet = null, holdPut = null, loseNextResponse = false, failNextGet = false, rejectNextPut = false;
-  let commits = 0;
+  let commits = 0, lastKeepalive = false;
   const clone = value => JSON.parse(JSON.stringify(value));
   globalThis.fetch = async (url, options = {}) => {
     const user = new URL(url, 'http://localhost').searchParams.get('ownerId');
@@ -38,6 +38,7 @@ try {
       if (holdGet) { const wait = holdGet; holdGet = null; await wait; }
       return Response.json(result);
     }
+    lastKeepalive = options.keepalive;
     const input = JSON.parse(options.body);
     if (rejectNextPut) { rejectNextPut = false; return Response.json({}, { status: 400 }); }
     if (holdPut) { const wait = holdPut; holdPut = null; await wait; }
@@ -55,7 +56,8 @@ try {
   const expense = { amount: 12.5, category: 'groceries', description: 'First', date: '2026-10-30' };
   expenses.getState().addExpense(expense);
   assert.equal(sync.getState().status, 'pending');
-  await save();
+  await save(true);
+  assert.equal(lastKeepalive, true, 'Small page-exit saves use keepalive immediately');
   assert.equal(database.get('A').data.expenses.length, 1);
   assert.equal(database.get('B').data.expenses.length, 0);
   const firstId = expenses.getState().expenses[0].id;

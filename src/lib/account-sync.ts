@@ -75,15 +75,16 @@ class StateRequestError extends Error {
   readonly status: number;
   constructor(status: number) { super(`Account request failed (${status})`); this.status = status; }
 }
-async function stateRequest(userId: string, mutation?: Mutation) {
+async function stateRequest(userId: string, mutation?: Mutation, keepalive = false) {
   const controller = new AbortController();
   requests.add(controller);
   const timeout = setTimeout(() => controller.abort(), 20000);
   try {
+    const body = mutation ? JSON.stringify({ ownerId: userId, ...mutation }) : undefined;
     const response = await fetch(`/api/state?ownerId=${encodeURIComponent(userId)}`, {
       method: mutation ? "PUT" : "GET", credentials: "same-origin", cache: "no-store",
       headers: mutation ? { "Content-Type": "application/json" } : undefined,
-      body: mutation ? JSON.stringify({ ownerId: userId, ...mutation }) : undefined,
+      body, keepalive: Boolean(keepalive && body && new TextEncoder().encode(body).byteLength <= 60_000),
       signal: controller.signal,
     });
     if (!response.ok) throw new StateRequestError(response.status);
@@ -110,7 +111,7 @@ function scheduleSave() {
   if (["conflict", "session-changed"].includes(useSyncStore.getState().status)) return;
   saveTimer = setTimeout(() => { void saveBudgetData(); }, 500);
 }
-export async function saveBudgetData() {
+export async function saveBudgetData(keepalive = false) {
   if (!owner || !dirty || inFlight || !useSyncStore.getState().ready) return;
   if (["conflict", "session-changed"].includes(useSyncStore.getState().status)) return;
   const userId = owner, generation = epoch;
@@ -126,7 +127,7 @@ export async function saveBudgetData() {
   writeDraft();
   useSyncStore.setState({ status: "saving", message: null });
   try {
-    const result = await stateRequest(userId, sent);
+    const result = await stateRequest(userId, sent, keepalive);
     if (!current(userId, generation)) return;
     revision = result.revision;
     pending = null;
@@ -276,3 +277,6 @@ export function archivedBrowserDrafts(userId: string): { key: string; updatedAt:
   } catch { /* Storage may be unavailable. The current in-memory draft is kept. */ }
   return drafts;
 }
+
+export function currentBudgetRevision() { return revision; }
+export function currentBudgetOwner() { return owner; }
