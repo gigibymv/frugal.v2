@@ -1,8 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { RecurringExpense } from "@/types";
-import { syncRecurringToSupabase } from "@/lib/sync";
-import { useAuthStore } from "@/store/authStore";
 import { useExpenseStore } from "@/store/expenseStore";
 import { addDays, addMonths, parseISO, isBefore, startOfDay, format } from "date-fns";
 
@@ -27,16 +25,9 @@ function getNextDueDate(reference: string, frequency: RecurringExpense["frequenc
   }
 }
 
-function syncIfUser(recurringExpenses: RecurringExpense[]) {
-  const user = useAuthStore.getState().user;
-  if (user) {
-    syncRecurringToSupabase(user.id, recurringExpenses);
-  }
-}
-
 export const useRecurringExpenseStore = create<RecurringExpenseState>()(
   persist(
-    (set, _get) => ({
+    (set) => ({
       recurringExpenses: [],
 
       addRecurring: (data) => {
@@ -48,7 +39,6 @@ export const useRecurringExpenseStore = create<RecurringExpenseState>()(
         };
         set((state) => {
           const newList = [recurring, ...state.recurringExpenses];
-          syncIfUser(newList);
           return { recurringExpenses: newList };
         });
       },
@@ -58,7 +48,6 @@ export const useRecurringExpenseStore = create<RecurringExpenseState>()(
           const newList = state.recurringExpenses.map((r) =>
             r.id === id ? { ...r, ...data } : r
           );
-          syncIfUser(newList);
           return { recurringExpenses: newList };
         });
       },
@@ -66,7 +55,6 @@ export const useRecurringExpenseStore = create<RecurringExpenseState>()(
       deleteRecurring: (id) => {
         set((state) => {
           const newList = state.recurringExpenses.filter((r) => r.id !== id);
-          syncIfUser(newList);
           return { recurringExpenses: newList };
         });
       },
@@ -76,7 +64,6 @@ export const useRecurringExpenseStore = create<RecurringExpenseState>()(
           const newList = state.recurringExpenses.map((r) =>
             r.id === id ? { ...r, active: !r.active } : r
           );
-          syncIfUser(newList);
           return { recurringExpenses: newList };
         });
       },
@@ -84,7 +71,6 @@ export const useRecurringExpenseStore = create<RecurringExpenseState>()(
       generateDueExpenses: () => {
         const today = startOfDay(new Date());
         const addExpense = useExpenseStore.getState().addExpense;
-        let changed = false;
 
         set((state) => {
           const newList = state.recurringExpenses.map((r) => {
@@ -104,7 +90,6 @@ export const useRecurringExpenseStore = create<RecurringExpenseState>()(
               });
               lastGenerated = format(nextDue, "yyyy-MM-dd");
               nextDue = getNextDueDate(lastGenerated, r.frequency);
-              changed = true;
             }
 
             if (lastGenerated !== r.lastGenerated) {
@@ -113,9 +98,6 @@ export const useRecurringExpenseStore = create<RecurringExpenseState>()(
             return r;
           });
 
-          if (changed) {
-            syncIfUser(newList);
-          }
           return { recurringExpenses: newList };
         });
       },

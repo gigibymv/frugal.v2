@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUIStore } from "@/store/uiStore";
+import { exportLocalBackup } from "@/lib/backup";
 import { useSettingsStore } from "@/store/settingsStore";
 import {
   Dialog,
@@ -44,6 +45,12 @@ export function SettingsModal() {
         </DialogHeader>
 
         <div className="px-6 pb-6 space-y-5">
+          <p className="text-sm text-muted-foreground">
+            Your data is saved in this browser on this device. It does not sync
+            between devices. Previous account data is not downloaded here.
+            Clearing site data removes your saved records.
+          </p>
+
           {/* Display Name */}
           <div className="space-y-2">
             <Label htmlFor="display-name" className="text-sm font-semibold text-foreground">
@@ -79,6 +86,14 @@ export function SettingsModal() {
               ))}
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={exportLocalBackup}
+            className="retro-btn w-full py-3 bg-card text-foreground font-semibold text-sm"
+          >
+            Download full backup (JSON)
+          </button>
 
           {/* Save */}
           <button

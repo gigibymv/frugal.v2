@@ -1,12 +1,9 @@
-import { LogOut, User } from "lucide-react";
+import { User } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
-import { useAuthStore } from "@/store/authStore";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export function Header() {
   const toggleSettingsModal = useUIStore((s) => s.toggleSettingsModal);
-  const user = useAuthStore((s) => s.user);
-  const signOut = useAuthStore((s) => s.signOut);
   const displayName = useSettingsStore((s) => s.displayName);
 
   return (
@@ -23,15 +20,8 @@ export function Header() {
           >
             <User className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs font-medium text-primary max-w-[100px] truncate">
-              {displayName || user?.email?.split("@")[0]}
+              {displayName || "Settings"}
             </span>
-          </button>
-          <button
-            onClick={signOut}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
-            aria-label="Sign out"
-          >
-            <LogOut className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
       </div>
